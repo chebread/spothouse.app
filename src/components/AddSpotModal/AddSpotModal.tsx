@@ -1,7 +1,9 @@
 'use client';
 
 import BottomSheet from 'components/BottomSheet';
-import Modal from 'components/Modal';
+import Radio from 'components/RadioBtn/Radio';
+import RadioGroup from 'components/RadioBtn/RadioGroup';
+import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import styled from 'styled-components';
 
@@ -11,6 +13,8 @@ import styled from 'styled-components';
 // (0): 전체 공개 혹은 비공개 선택 가능 (비공개는 자신의 프로필에서만 확인가능)
 
 const AddSpotModal = ({ open, lat, lng, onDismiss }) => {
+  const [value, setValue] = useState('public');
+
   const FILE_MAX_SIZE = 10000000; // 10mb
   const fileAcceptTypes = {
     'image/*': [],
@@ -43,15 +47,12 @@ const AddSpotModal = ({ open, lat, lng, onDismiss }) => {
     >
       <h1>공개 범위</h1>
 
-      <label>
-        <input type="radio" defaultChecked={true} />
-        전체 공개
-      </label>
-
-      <label>
-        <input type="radio" defaultChecked={false} />
-        비공개
-      </label>
+      <RadioGroup value={value} onChange={setValue}>
+        <Radio value="public" defaultChecked>
+          전체 공개
+        </Radio>
+        <Radio value="private">비공개</Radio>
+      </RadioGroup>
 
       <h1>썸네일</h1>
       <p>그 장소를 표현할 수 있는 가장 좋은 사진을 선택하세요.</p>

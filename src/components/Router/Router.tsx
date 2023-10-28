@@ -1,8 +1,7 @@
 import Notifications from 'app/(Notifications)';
-import Policy from 'app/(Policy)';
 import Profile from 'app/(Profile)';
-import Settigns from 'components/Settigns';
 import { useSearchParams } from 'next/navigation';
+import Settings from 'components/Settings';
 
 const Router = () => {
   const searchParams = useSearchParams();
@@ -18,13 +17,11 @@ const Router = () => {
       case 'u':
         return paramUsername != '' ? <Profile /> : '';
       case 's':
-        return <Settigns />;
+        return <Settings />;
       case 'n':
         return <Notifications />;
       case 'p':
         return paramPosts != '' ? '' : '';
-      case 'policy':
-        return <Policy />;
       default:
         return null;
     }

@@ -1,6 +1,6 @@
 import loadUserDataByUsername from 'lib/supabase/loadUserDataByUsername';
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
@@ -83,48 +83,46 @@ const Profile = () => {
 
   return (
     <>
-      <BottomSheet open={true} blocking={false} onDismiss={onClose}>
-        <Wrapper>
-          <>
-            <LeftWrapper>
-              <ProfileImage
-                style={{
-                  backgroundImage: `url(${userData.profileFileUrl})`,
-                }}
-                onClick={onProfileImageClick}
-              ></ProfileImage>
-              <InfoWrapper>
-                <UsernameWrapper>
-                  <Username
-                    onClick={onUsernameClick}
-                    $isPersonalProfile={isPersonalProfile}
-                  >
-                    {userData.username}
-                  </Username>
-                </UsernameWrapper>
-                <BioWrapper>
-                  <Bio
-                    onClick={onBioClick}
-                    $isPersonalProfile={isPersonalProfile}
-                  >
-                    {userData.bio}
-                  </Bio>
-                </BioWrapper>
-              </InfoWrapper>
-            </LeftWrapper>
-            <RightWrapper>
-              {isPersonalProfile ? (
-                <MoreSeeBtn onClick={onMoreSee}>더보기</MoreSeeBtn>
-              ) : (
-                <>
-                  <FollowBtn onClick={onFollow} $isFollowing={isFollowing}>
-                    {isFollowing ? '팔로잉' : '팔로우'}
-                  </FollowBtn>
-                </>
-              )}
-            </RightWrapper>
-          </>
-        </Wrapper>
+      <BottomSheet open={isUserExisted} blocking={false} onDismiss={onClose}>
+        <Container>
+          <LeftWrapper>
+            <ProfileImage
+              style={{
+                backgroundImage: `url(${userData.profileFileUrl})`,
+              }}
+              onClick={onProfileImageClick}
+            ></ProfileImage>
+            <InfoWrapper>
+              <UsernameWrapper>
+                <Username
+                  onClick={onUsernameClick}
+                  $isPersonalProfile={isPersonalProfile}
+                >
+                  {userData.username}
+                </Username>
+              </UsernameWrapper>
+              <BioWrapper>
+                <Bio
+                  onClick={onBioClick}
+                  $isPersonalProfile={isPersonalProfile}
+                >
+                  {userData.bio}
+                </Bio>
+              </BioWrapper>
+            </InfoWrapper>
+          </LeftWrapper>
+          <RightWrapper>
+            {isPersonalProfile ? (
+              <MoreSeeBtn onClick={onMoreSee}>더보기</MoreSeeBtn>
+            ) : (
+              <>
+                <FollowBtn onClick={onFollow} $isFollowing={isFollowing}>
+                  {isFollowing ? '팔로잉' : '팔로우'}
+                </FollowBtn>
+              </>
+            )}
+          </RightWrapper>
+        </Container>
       </BottomSheet>
       {isSeeMoreClicked ? <SeeMore /> : ''}
       {isProfileImageClicked ? (
@@ -139,72 +137,10 @@ const Profile = () => {
   );
 };
 
-const ProfileContainer = styled.div`
-  // 이거 때문에 사이즈 유지됨. 지우지 말기.
-  width: 100%;
-`;
-const CloseBtnContainer = styled.div`
-  cursor: pointer;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const CloseBtnWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-
-  padding: 0.75rem; // padding: 0.75rem 0 0 0 /  padding: 0.75rem
-`;
-const CloseBtn = styled.button`
-  all: unset;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-
-  background-color: rgb(219, 219, 219);
-  border-radius: 2px;
-  box-sizing: border-box;
-  height: 4px;
-  width: 48px;
-`;
-
-const Container = styled.div<{ $visible: boolean }>`
-  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
-  flex-direction: column;
-  position: absolute;
-  z-index: 1;
-  bottom: 0;
-  background: #fff;
-  width: 100%;
-  border-top-right-radius: 1rem;
-  border-top-left-radius: 1rem;
-
-  box-shadow: 0 -10.5px 21px rgba(0, 0, 0, 0.08);
-  /* 
-  animation-duration: 0.2s;
-  animation-timing-function: ease-in-out;
-  animation-name: smooth;
-
-  @keyframes smooth {
-    from {
-      opacity: 0;
-      transform: scale(0);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  } */
-`;
-
-const Wrapper = styled.div`
-  max-width: 640px;
-  margin: 0 auto;
+const Container = styled.div`
+  max-width: 100%;
   height: 100%;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
   padding: 1rem; // padding: 1rem / padding: 0 1rem 1rem 1rem
   display: flex;
   flex-direction: row;

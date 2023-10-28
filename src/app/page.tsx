@@ -13,10 +13,7 @@ import { useAtom } from 'jotai';
 import supabase from 'lib/supabase';
 import { useEffect, useState } from 'react';
 import loadUserData from '../lib/supabase/loadUserDataByUid';
-import Loading from 'components/Loading';
-import styled from 'styled-components';
-import Modal from 'components/Modal';
-import logout from 'lib/supabase/logout';
+import Loading from 'app/(Loading)';
 
 // (0): 여기서 /?u= 처리하기
 // 내부적은 uid 사용, 외부 사용자 개입되는 것은 username 사용

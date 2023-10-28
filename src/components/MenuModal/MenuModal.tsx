@@ -1,7 +1,7 @@
 import { isLoggedInAtom } from 'atom/authAtom';
 import { useAtom } from 'jotai';
 import supabase from 'lib/supabase';
-import logout from 'lib/supabase/logout';
+import logoutUser from 'lib/supabase/logoutUser';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
@@ -15,7 +15,7 @@ const MenuModal = ({ visible, onCollapse }) => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
 
   const onLogout = async () => {
-    await logout({
+    await logoutUser({
       success: () => {
         setIsLoggedIn(false);
         router.push('/');

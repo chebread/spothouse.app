@@ -78,7 +78,12 @@ const ProfileImage = styled.div`
 `;
 const Container = styled.div`
   position: fixed;
-  z-index: 1;
+  z-index: 2;
+  // 제일 높은 위치의 z-index
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
   height: 100%;
   width: 100%;
   backdrop-filter: blur(2rem);
