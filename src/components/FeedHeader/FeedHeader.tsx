@@ -42,11 +42,6 @@ const FeedHeader = () => {
   const onMenu = () => {
     setIsMenuClicked(!isMenuClicked);
   };
-  // 움직임 발생시
-  const onMove = () => {
-    setIsMoved(true); // 움직임이 발생했음을 알림
-    setIsFocused(false); // 자동 추적 기능 비활성화
-  };
   // 검색 클릭시
   const onSearch = () => {
     setIsSearchClicked(true);

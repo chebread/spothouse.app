@@ -17,9 +17,7 @@ import Loading from 'app/(Loading)';
 import { isApproximatePosLoadedAtom } from 'atom/mapAtom';
 import Router from 'components/Router';
 
-// (0): 여기서 /?u= 처리하기
 // 내부적은 uid 사용, 외부 사용자 개입되는 것은 username 사용
-// (0): 여기서 Feed map data 로딩하고 Feed에 뿌려주기 (이 곳이 중앙 처리군이 되는 것임)
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
@@ -59,6 +57,7 @@ const Home = () => {
       <>
         <Feed />
         {isApproximatePosLoaded ? (
+          // 대략위치 로드시
           <>
             {/* 라우터 */}
             <Router />

@@ -13,6 +13,8 @@ import LogoSvg from 'assets/LogoSvg.svg';
 import checkEmailFormat from 'lib/checkEmailFormat';
 import checkPwFormat from 'lib/checkPwFormat';
 import { BottomSheet } from 'react-spring-bottom-sheet';
+import disableHighlight from 'styles/disableHighlight';
+import disableSelection from 'styles/disableSelection';
 
 // 로그인 및 회원가입 페이지
 // 사용자가 정보가 없으면 회원가입 처리, 있으면 로그인 처리하기
@@ -82,8 +84,6 @@ const Register = () => {
           alert('이메일 혹은 이메일이 틀려 로그인 할 수 없습니다.');
         }
       }
-    } else {
-      alert('이메일 또는 비밀번호의 형식이 올바르지 않습니다.');
     }
   };
 
@@ -111,7 +111,7 @@ const Register = () => {
           />
           <SubmitBtn
             onClick={onSubmit}
-            $isFilled={userEmail != '' && userPw != ''}
+            $isFilled={checkEmailFormat(userEmail) && checkPwFormat(userPw)}
           >
             로그인 및 회원가입
           </SubmitBtn>
@@ -150,6 +150,9 @@ const Notice = styled.span`
 `;
 const TextInput = styled.input`
   all: unset;
+  ${disableHighlight}
+  ${disableSelection}
+  
   font-size: 15px;
   line-height: 140%;
   color: #000;
@@ -170,6 +173,13 @@ const TextInput = styled.input`
 const SubmitBtn = styled.button<{ $isFilled: boolean }>`
   all: unset;
   cursor: pointer;
+  ${disableHighlight}
+  ${disableSelection}
+
+  transition-property: transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+
   font-weight: 600;
   font-size: 15px;
   line-height: 140%;
@@ -182,6 +192,10 @@ const SubmitBtn = styled.button<{ $isFilled: boolean }>`
   background-color: #000;
   color: ${({ $isFilled }) => ($isFilled ? '#fff' : '#616161')}; // #A1A1A1
   box-sizing: border-box;
+
+  &:active {
+    transform: scale(0.96);
+  }
 `;
 
 export default Register;
