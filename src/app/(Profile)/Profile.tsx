@@ -9,6 +9,7 @@ import ProfileImageViewer from 'components/ProfileImageViewer';
 import SeeMore from 'components/SeeMore';
 import disableSelection from 'styles/disableSelection';
 import disableHighlight from 'styles/disableHighlight';
+import BottomSheet from 'components/BottomSheet';
 
 // (0): 아래로 내릴 수 있는 기능 추가하기
 // (0): 프로필이 자신인지 확인하는 기능 추가하기 => 더보기 클릭시 모달이 뜨고, 거기서 팔로워, 팔로잉 볼 수 있고 관리 가능함
@@ -82,56 +83,49 @@ const Profile = () => {
 
   return (
     <>
-      <Container $visible={isUserExisted}>
-        <CloseBtnContainer onClick={onClose}>
-          <CloseBtnWrapper>
-            <CloseBtn></CloseBtn>
-          </CloseBtnWrapper>
-        </CloseBtnContainer>
-        <ProfileContainer>
-          <Wrapper>
-            <>
-              <LeftWrapper>
-                <ProfileImage
-                  style={{
-                    backgroundImage: `url(${userData.profileFileUrl})`,
-                  }}
-                  onClick={onProfileImageClick}
-                ></ProfileImage>
-                <InfoWrapper>
-                  <UsernameWrapper>
-                    <Username
-                      onClick={onUsernameClick}
-                      $isPersonalProfile={isPersonalProfile}
-                    >
-                      {userData.username}
-                    </Username>
-                  </UsernameWrapper>
-                  <BioWrapper>
-                    <Bio
-                      onClick={onBioClick}
-                      $isPersonalProfile={isPersonalProfile}
-                    >
-                      {userData.bio}
-                    </Bio>
-                  </BioWrapper>
-                </InfoWrapper>
-              </LeftWrapper>
-              <RightWrapper>
-                {isPersonalProfile ? (
-                  <MoreSeeBtn onClick={onMoreSee}>더보기</MoreSeeBtn>
-                ) : (
-                  <>
-                    <FollowBtn onClick={onFollow} $isFollowing={isFollowing}>
-                      {isFollowing ? '팔로잉' : '팔로우'}
-                    </FollowBtn>
-                  </>
-                )}
-              </RightWrapper>
-            </>
-          </Wrapper>
-        </ProfileContainer>
-      </Container>
+      <BottomSheet open={true} blocking={false} onDismiss={onClose}>
+        <Wrapper>
+          <>
+            <LeftWrapper>
+              <ProfileImage
+                style={{
+                  backgroundImage: `url(${userData.profileFileUrl})`,
+                }}
+                onClick={onProfileImageClick}
+              ></ProfileImage>
+              <InfoWrapper>
+                <UsernameWrapper>
+                  <Username
+                    onClick={onUsernameClick}
+                    $isPersonalProfile={isPersonalProfile}
+                  >
+                    {userData.username}
+                  </Username>
+                </UsernameWrapper>
+                <BioWrapper>
+                  <Bio
+                    onClick={onBioClick}
+                    $isPersonalProfile={isPersonalProfile}
+                  >
+                    {userData.bio}
+                  </Bio>
+                </BioWrapper>
+              </InfoWrapper>
+            </LeftWrapper>
+            <RightWrapper>
+              {isPersonalProfile ? (
+                <MoreSeeBtn onClick={onMoreSee}>더보기</MoreSeeBtn>
+              ) : (
+                <>
+                  <FollowBtn onClick={onFollow} $isFollowing={isFollowing}>
+                    {isFollowing ? '팔로잉' : '팔로우'}
+                  </FollowBtn>
+                </>
+              )}
+            </RightWrapper>
+          </>
+        </Wrapper>
+      </BottomSheet>
       {isSeeMoreClicked ? <SeeMore /> : ''}
       {isProfileImageClicked ? (
         <ProfileImageViewer
