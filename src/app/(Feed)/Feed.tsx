@@ -4,21 +4,30 @@ import useMap from 'lib/map/useMap';
 import { useEffect, useState } from 'react';
 import { CustomOverlayMap, Map } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import NavigationIcon from 'assets/NavigationIcon.svg';
-import FilledNavigationIcon from 'assets/FilledNavigationIcon.svg';
-import MenuIcon from 'assets/MenuIcon.svg';
-import AddIcon from 'assets/AddIcon.svg';
 import Link from 'next/link';
 import { currentUserDataAtom } from 'atom/authAtom';
 import { useAtom } from 'jotai';
 import Loading from 'app/(Loading)';
 import { useSearchParams } from 'next/navigation';
-import { isApproximatePosLoadedAtom } from 'atom/mapAtom';
+import {
+  addedPosAtom,
+  centerPosAtom,
+  currentPosAtom,
+  isAddedAtom,
+  isApproximatePosLoadedAtom,
+  isCurrentPosLoadedAtom,
+  isDataLoadedAtom,
+  isFocusedAtom,
+  isMenuClickedAtom,
+  isMovedAtom,
+  zoomLevelAtom,
+} from 'atom/mapAtom';
 import MenuModal from 'components/MenuModal';
 import AddSpotModal from 'components/AddSpotModal';
 import Router from 'components/Router';
 import disableHighlight from 'styles/disableHighlight';
 import disableSelection from 'styles/disableSelection';
+import FeedHeader from 'components/FeedHeader';
 
 // (0): /#u/(USERNAME) 의 형태로 바꾸기
 // (0): 플러스 누르면 현재위치의 스팟이 추가됨. 지도상에서 꾹 누르거나 더블 클릭하면 그 위치에서 스팟이 추가됨! (장소만 다르지 기능적 측면은 완전일치함) => 현재위치 추가의 국한되지 않기!
@@ -38,30 +47,23 @@ const Feed = () => {
     .substring(0, searchParams.toString().indexOf('='));
   const paramUsername = searchParams.get('u');
   const paramPosts = searchParams.get('p');
-  const [level, setLevel] = useState<number>(4); // level 정보
-  const [center, setCenter] = useState<{ lat: number; lng: number }>({
-    lat: 37.575857,
-    lng: 126.976805,
-  }); // Map center 위치 정보
-  const [currentPos, setCurrentPos] = useState<{ lat: number; lng: number }>({
-    lat: 37.575857,
-    lng: 126.976805,
-  }); // 현재 위치 정보
-  const [addedPos, setAddedPos] = useState<{ lat: number; lng: number }>({
-    lat: 37.575857,
-    lng: 126.976805,
-  }); // 추가한 위치 정보
+  const [level, setLevel] = useAtom(zoomLevelAtom); // level 정보
+  const [center, setCenter] = useAtom(centerPosAtom); // Map center 위치 정보
+  const [currentPos, setCurrentPos] = useAtom(currentPosAtom); // 현재 위치 정보
+  const [addedPos, setAddedPos] = useAtom(addedPosAtom); // 추가한 위치 정보
   const [isApproximatePosLoaded, setIsApproximatePosLoaded] = useAtom(
     isApproximatePosLoadedAtom
   ); // 대략 위치 로드시
-  const [isCurrentPosLoaded, setIsCurrentPosLoaded] = useState<boolean>(false); // 현재 위치 로드시
-  const [isFocused, setIsFocused] = useState<boolean>(false); // 사용자 위치 추적
+  const [isCurrentPosLoaded, setIsCurrentPosLoaded] = useAtom(
+    isCurrentPosLoadedAtom
+  ); // 현재 위치 로드시
+  const [isFocused, setIsFocused] = useAtom(isFocusedAtom); // 사용자 위치 추적
   const [watcher, setWatcher] = useState<any>();
-  const [isDataLoaded, setIsDataLoaded] = useState(false); // 데이터 로딩 되었는가? => isMoved시 false됨
-  const [isMoved, setIsMoved] = useState<boolean>(false); // 사용자가 지도를 움직일 시 => 다시 데이터 로딩 필요!
+  const [isDataLoaded, setIsDataLoaded] = useAtom(isDataLoadedAtom); // 데이터 로딩 되었는가? => isMoved시 false됨
+  const [isMoved, setIsMoved] = useAtom(isMovedAtom); // 사용자가 지도를 움직일 시 => 다시 데이터 로딩 필요!
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false); // Search 버튼 클릭시
-  const [isAdded, setIsAdded] = useState<boolean>(false); // 위치 추가 토글
-  const [isMenuClicked, setIsMenuClicked] = useState<boolean>(false);
+  const [isAdded, setIsAdded] = useAtom(isAddedAtom); // 위치 추가 토글
+  const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
   const [currentUserData] = useAtom(currentUserDataAtom);
   const [markers, setMarkers] = useState({});
   const [personalMarkers, SetPersonalMarkers] = useState({}); // 사용자 자신이 추가되고 삭제되고 수정된 마커들 (다시 불러오지 않고 자신이 한 것은 이렇게 한다!)
@@ -193,9 +195,6 @@ const Feed = () => {
       lng: lng,
     });
   };
-  const onMenu = () => {
-    setIsMenuClicked(!isMenuClicked);
-  };
 
   return (
     <>
@@ -216,18 +215,6 @@ const Feed = () => {
               }}
               isPanto
             >
-              {/* {isAdded ? (
-                // 추가한 장소 마커 (임시 마커라고 생각하자)
-                // <CustomOverlayMap position={addedPos}>
-                //   <AddedPosMarker onClick={onFocus}></AddedPosMarker>
-                // </CustomOverlayMap>
-                <MapMarker // 마커를 생성합니다
-                  position={addedPos}
-                  clickable={false}
-                />
-              ) : (
-                ''
-              )} */}
               {isCurrentPosLoaded ? (
                 <>
                   <CustomOverlayMap position={currentPos}>
@@ -238,75 +225,10 @@ const Feed = () => {
                 ''
               )}
             </MapViewer>
-            <BtnWrapper>
-              <LeftBtnWrapper>
-                <MenuBtn
-                  onClick={(e: any) => {
-                    onMenu();
-                  }}
-                >
-                  <MenuIcon />
-                </MenuBtn>
-                <ProfileBtn
-                  href={
-                    paramUsername === currentUserData.username
-                      ? '/'
-                      : `?u=${currentUserData.username}`
-                  }
-                  style={{
-                    backgroundImage: `url(${currentUserData.profileFileUrl})`,
-                  }}
-                ></ProfileBtn>
-              </LeftBtnWrapper>
-              <CenterBtnWrapper>
-                {isMoved ? (
-                  <SearchBtnWrapper>
-                    <SearchBtn
-                      onClick={(e: any) => {
-                        onSearch();
-                      }}
-                    >
-                      {isSearchClicked ? '읽어들이는 중...' : '이 지역 검색'}
-                    </SearchBtn>
-                  </SearchBtnWrapper>
-                ) : (
-                  ''
-                )}
-              </CenterBtnWrapper>
-              <RightBtnWrapper>
-                <AddBtn onClick={onAddCurrentSpot}>
-                  <AddIcon />
-                </AddBtn>
-                <FocusBtn
-                  onClick={(e: any) => {
-                    onFocus();
-                    setIsFocused(true);
-                  }}
-                >
-                  {isFocused ? <FilledNavigationIcon /> : <NavigationIcon />}
-                </FocusBtn>
-              </RightBtnWrapper>
-            </BtnWrapper>
-            <MenuModal visible={isMenuClicked} onCollapse={onMenu} />
-            {/* {(() => {
-              // Router 컴포넌트로 전환함
-              switch (paramRoutes) {
-                case 'u':
-                  return paramUsername != '' ? <Profile /> : '';
-                case 's':
-                  return <Settigns />;
-                case 'n':
-                  return <Notifications />;
-                case 'p':
-                  return paramPosts != '' ? '' : '';
-                case 'policy':
-                  return <Policy />;
-                default:
-                  return null;
-              }
-            })()} */}
-            <Router />
+            {/* 헤더 */}
+            <FeedHeader />
             {/* 모달 */}
+            <MenuModal />
             <AddSpotModal
               open={isAdded}
               lat={addedPos.lat}

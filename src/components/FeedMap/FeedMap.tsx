@@ -1,7 +1,30 @@
 const FeedMap = () => {
   return (
     <>
-      <h1>Feed map</h1>
+      <MapViewer
+        center={center}
+        level={level}
+        onZoomChanged={onZoomChanged}
+        onCenterChanged={onCenterChanged}
+        onZoomStart={onMove}
+        onDragStart={onMove}
+        disableDoubleClickZoom={true}
+        onDoubleClick={onAddSpot}
+        onClick={() => {
+          setIsMenuClicked(false);
+        }}
+        isPanto
+      >
+        {isCurrentPosLoaded ? (
+          <>
+            <CustomOverlayMap position={currentPos}>
+              <CurrentPosMarker onClick={onFocus}></CurrentPosMarker>
+            </CustomOverlayMap>
+          </>
+        ) : (
+          ''
+        )}
+      </MapViewer>
     </>
   );
 };

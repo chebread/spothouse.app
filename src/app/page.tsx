@@ -14,6 +14,8 @@ import supabase from 'lib/supabase';
 import { useEffect, useState } from 'react';
 import loadUserData from '../lib/supabase/loadUserDataByUid';
 import Loading from 'app/(Loading)';
+import { isApproximatePosLoadedAtom } from 'atom/mapAtom';
+import Router from 'components/Router';
 
 // (0): 여기서 /?u= 처리하기
 // 내부적은 uid 사용, 외부 사용자 개입되는 것은 username 사용
@@ -25,6 +27,7 @@ const Home = () => {
   const [currentUserData, setCurrentUserData] = useAtom(currentUserDataAtom);
   const [uid, setUid] = useAtom(uidAtom);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isApproximatePosLoaded] = useAtom(isApproximatePosLoadedAtom);
 
   useEffect(() => {
     const onLoad = async () => {
@@ -55,22 +58,14 @@ const Home = () => {
     isLoggedIn ? (
       <>
         <Feed />
-        {/* {isApproximatePosLoaded
-          ? (() => {
-              switch (router) {
-                case 'u':
-                  return paramUsername != '' ? <Profile /> : '';
-                case 's':
-                  return '';
-                case 'n':
-                  return '';
-                case 'p':
-                  return paramPosts != '' ? '' : '';
-                default:
-                  return null;
-              }
-            })()
-          : ''} */}
+        {isApproximatePosLoaded ? (
+          <>
+            {/* 라우터 */}
+            <Router />
+          </>
+        ) : (
+          ''
+        )}
       </>
     ) : (
       <>
