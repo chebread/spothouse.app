@@ -21,7 +21,7 @@ import disableSelection from 'styles/disableSelection';
 
 // app 에 위치하되, 라우팅은 제외시키기 (쿼리스트링 라우팅 쓰기 때문에)
 
-const Register = () => {
+const RegisterForm = () => {
   const [isSignedUp, setIsSignedUp] = useAtom(isSignedUpAtom); // 회원가입시
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [userEmail, setUserEmail] = useState<string>('');
@@ -197,4 +197,4 @@ const SubmitBtn = styled.button<{ $isFilled: boolean }>`
   }
 `;
 
-export default Register;
+export default RegisterForm;

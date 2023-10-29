@@ -7,8 +7,8 @@ import {
   currentUserDataAtom,
 } from 'atom/authAtom';
 import Feed from 'app/(Feed)';
-import Register from 'app/(Register)';
-import SignUp from 'app/(SignUp)';
+import RegisterForm from 'app/(RegisterForm)';
+import SignUpForm from 'app/(SignUpForm)';
 import { useAtom } from 'jotai';
 import supabase from 'lib/supabase';
 import { useEffect, useState } from 'react';
@@ -68,8 +68,8 @@ const Home = () => {
       </>
     ) : (
       <>
-        {isSignedUp ? <SignUp /> : ''}
-        <Register />
+        {isSignedUp ? <SignUpForm /> : ''}
+        <RegisterForm />
       </>
     )
   ) : (

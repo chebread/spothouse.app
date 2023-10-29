@@ -5,6 +5,7 @@ import Preferences from 'app/(Preferences)';
 import BottomSheet from 'components/BottomSheet';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import styled from 'styled-components';
 
 const Settings = () => {
   const searchParams = useSearchParams();
@@ -16,7 +17,18 @@ const Settings = () => {
   };
 
   return (
-    <BottomSheet open={true} onDismiss={onDismiss}>
+    <BottomSheet
+      open={true}
+      onDismiss={onDismiss}
+      header="설정"
+      footer={
+        <Footer>
+          <button>
+            <span>뒤로가기</span>
+          </button>
+        </Footer>
+      }
+    >
       {(() => {
         switch (paramSettings) {
           case '':
@@ -34,5 +46,37 @@ const Settings = () => {
     </BottomSheet>
   );
 };
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: center;
+  button {
+    all: unset;
+    cursor: pointer;
+
+    transition-property: transform background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+
+    background-color: rgb(245, 245, 245);
+    box-sizing: border-box;
+    border: 1px solid rgb(203, 213, 225);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    width: 640px;
+    height: 3rem;
+    &:active {
+      background-color: rgb(235, 235, 235);
+      transform: scale(0.96);
+    }
+    span {
+      font-size: 1rem;
+      line-height: 130%;
+      font-weight: 600;
+    }
+  }
+`;
 
 export default Settings;

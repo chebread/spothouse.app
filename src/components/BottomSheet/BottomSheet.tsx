@@ -10,6 +10,7 @@ const BottomSheet = ({
   header,
   onDismiss,
   blocking,
+  footer,
 }: {
   children: any;
   open: boolean;
@@ -17,6 +18,7 @@ const BottomSheet = ({
   header?: ReactNode;
   onDismiss?: any;
   blocking?: boolean;
+  footer?: ReactNode;
 }) => {
   return (
     <Container
@@ -24,15 +26,23 @@ const BottomSheet = ({
       snapPoints={
         snapPoints != undefined ? snapPoints : ({ minHeight }) => minHeight
       }
-      header={header}
+      header={header != undefined ? <Header>{header}</Header> : ''}
       onDismiss={onDismiss}
       blocking={blocking}
+      footer={footer}
     >
       <Wrapper>{children}</Wrapper>
     </Container>
   );
 };
 
+const Header = styled.span`
+  display: block;
+  padding-top: 0.25rem;
+  font-size: 1.1rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+`;
 const Container = styled(BottomSheetProvider)`
   // 모달
   [data-rsbs-overlay] {

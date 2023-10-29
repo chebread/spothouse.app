@@ -19,7 +19,7 @@ import {
   zoomLevelAtom,
 } from 'atom/mapAtom';
 import MenuModal from 'components/MenuModal';
-import AddSpotModal from 'components/AddSpotModal';
+import AddSpotModal from 'components/SpotingModal';
 import FeedHeader from 'components/FeedHeader';
 import FeedMap from 'components/FeedMap';
 

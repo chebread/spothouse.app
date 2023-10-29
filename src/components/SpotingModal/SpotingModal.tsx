@@ -12,7 +12,7 @@ import styled from 'styled-components';
 
 // (0): 전체 공개 혹은 비공개 선택 가능 (비공개는 자신의 프로필에서만 확인가능)
 
-const AddSpotModal = ({ open, lat, lng, onDismiss }) => {
+const SpotingModal = ({ open, lat, lng, onDismiss }) => {
   const [value, setValue] = useState('public');
 
   const FILE_MAX_SIZE = 10000000; // 10mb
@@ -44,6 +44,14 @@ const AddSpotModal = ({ open, lat, lng, onDismiss }) => {
       open={open}
       onDismiss={onDismiss}
       snapPoints={({ maxHeight }) => maxHeight - maxHeight / 15}
+      header="새 장소"
+      footer={
+        <Footer>
+          <button>
+            <span>게시하기</span>
+          </button>
+        </Footer>
+      }
     >
       <h1>공개 범위</h1>
 
@@ -80,10 +88,40 @@ const AddSpotModal = ({ open, lat, lng, onDismiss }) => {
       <h1>설명</h1>
       <p>그 장소에 대한 설명을 적어주세요.</p>
       <textarea maxLength={1000} />
-      <h1></h1>
-      <button>업로드</button>
     </BottomSheet>
   );
 };
 
-export default AddSpotModal;
+const Footer = styled.div`
+  display: flex;
+  justify-content: center;
+  button {
+    all: unset;
+    cursor: pointer;
+
+    transition-property: transform background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+
+    background-color: rgb(245, 245, 245);
+    box-sizing: border-box;
+    border: 1px solid rgb(203, 213, 225);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    width: 640px;
+    height: 3rem;
+    &:active {
+      background-color: rgb(235, 235, 235);
+      transform: scale(0.96);
+    }
+    span {
+      font-size: 1rem;
+      line-height: 130%;
+      font-weight: 600;
+    }
+  }
+`;
+
+export default SpotingModal;
