@@ -1,5 +1,6 @@
 import StyledComponentsRegistry from 'lib/registry';
 import type { Metadata } from 'next';
+import { Toaster } from 'react-hot-toast';
 import styled from 'styled-components';
 
 import GlobalStyles from 'styles/GlobalStyles';
@@ -15,6 +16,16 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <GlobalStyles />
           {children}
+          {/* Portal */}
+          <div id="toast">
+            <Toaster
+              position="bottom-center"
+              reverseOrder={false}
+              toastOptions={{
+                duration: 2000,
+              }}
+            />
+          </div>
         </StyledComponentsRegistry>
       </body>
     </html>

@@ -3,15 +3,18 @@
 import {
   isLoggedInAtom,
   isSignedUpAtom,
-  profileFileAtom,
   uidAtom,
   currentUserDataAtom,
+  signUpUserDataAtom,
 } from 'atom/authAtom';
 import BottomSheet from 'components/BottomSheet';
 import { useAtom } from 'jotai';
+import checkBio from 'lib/checkBio';
+import checkUsername from 'lib/checkUsername';
 import signUp from 'lib/supabase/signUp';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
+import toast from 'react-hot-toast';
 import styled from 'styled-components';
 
 // (0): 모달로 처리하자 (전체)
@@ -23,23 +26,42 @@ const SignUp = () => {
     'image/*': [],
   };
   const FILE_MAX_SIZE = 10000000; // 10mb
-  const [bio, setBio] = useState<string>('');
-  const [username, setUsername] = useState<string>('');
-  const [profileFile, setProfileFile] = useAtom(profileFileAtom);
+  // const [bio, setBio] = useState<string>('');
+  // const [username, setUsername] = useState<string>('');
+  // const [profileImageFile, setProfileImageFile] = useAtom(profileFileAtom);
   const [uid, setUid] = useAtom(uidAtom);
   const [isSignedUp, setIsSignedUp] = useAtom(isSignedUpAtom);
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [currentUserData, setCurrentUserData] = useAtom(currentUserDataAtom);
+  const [signUpUserData, setSignUpUserData] = useState<{
+    username: string;
+    bio: string;
+    profileImageFile: File;
+  }>({
+    username: '',
+    bio: '',
+    profileImageFile: null,
+  });
 
   const onChange = (e: any) => {
     const {
       target: { value, id },
     } = e;
     if (id === 'username') {
-      setUsername(value);
+      setSignUpUserData(prev => {
+        return {
+          ...prev,
+          username: value,
+        };
+      });
     }
     if (id === 'bio') {
-      setBio(value);
+      setSignUpUserData(prev => {
+        return {
+          ...prev,
+          bio: value,
+        };
+      });
     }
   };
   const onDropFile = async (files: any) => {
@@ -59,26 +81,41 @@ const SignUp = () => {
       alert('10MB 이하의 파일만 업로드 가능합니다');
       return;
     }
-    setProfileFile(file);
+    // save file
+    setSignUpUserData(prev => {
+      return {
+        ...prev,
+        profileImageFile: file,
+      };
+    });
   };
   // 회원가입 최종 진행
   const onSubmit = () => {
-    signUp({
-      profileFile: profileFile,
-      uid: uid,
-      bio: bio,
-      username: username,
-    })
-      .then(userData => {
-        setCurrentUserData(userData);
-        setIsSignedUp(false); // 회원가입 종료
-        setIsLoggedIn(true); // 로그인됨
-      })
-      .catch(error => {
-        console.log(error);
+    const isProfileImageCorrect = signUpUserData.profileImageFile != null;
+    console.log(signUpUserData.profileImageFile);
 
-        alert('회원가입중 오류가 발생하였습니다.');
-      });
+    const isUsernameCorrect = checkUsername(signUpUserData.username);
+    console.log(isUsernameCorrect);
+
+    const isBioCorrect = checkBio(signUpUserData.bio);
+    console.log(isBioCorrect);
+
+    if (isProfileImageCorrect && isUsernameCorrect && isBioCorrect) {
+      signUp({
+        profileImageFile: signUpUserData.profileImageFile,
+        uid: uid,
+        bio: signUpUserData.bio,
+        username: signUpUserData.username,
+      })
+        .then(userData => {
+          setCurrentUserData(userData);
+          setIsSignedUp(false); // 회원가입 종료
+          setIsLoggedIn(true); // 로그인됨
+        })
+        .catch(error => {
+          toast.error('회원가입중 오류가 발생하였습니다.');
+        });
+    }
   };
   return (
     <BottomSheet
@@ -86,7 +123,7 @@ const SignUp = () => {
       snapPoints={({ maxHeight }) => maxHeight - maxHeight / 15}
     >
       <Container>
-        <h1>환영합니다. 회원가입을 위해 아래의 정보를 입력해주세요.</h1>
+        <h1>회원가입을 위해 아래의 정보를 입력해주세요.</h1>
         <h2>이름</h2>
         <p>
           한글 혹은 알바벳을 꼭 입력하세요. 단 띄어쓰기는 할 수 없으며, 하이픈
@@ -95,7 +132,7 @@ const SignUp = () => {
         <input
           maxLength={50}
           type="text"
-          value={username}
+          value={signUpUserData.username}
           onChange={onChange}
           id="username"
         />
@@ -107,7 +144,7 @@ const SignUp = () => {
         <input
           maxLength={150}
           type="text"
-          value={bio}
+          value={signUpUserData.bio}
           onChange={onChange}
           id="bio"
         />
@@ -129,14 +166,29 @@ const SignUp = () => {
               <>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <button onClick={open}>프로필 사진 선택하기</button>
+                  <button onClick={open}>
+                    {signUpUserData.profileImageFile != null
+                      ? '프로필 사진 다시 선택하기'
+                      : '프로필 사진 선택'}
+                  </button>
                 </div>
               </>
             );
           }}
         </Dropzone>
+        <button
+          onClick={() => {
+            const isProfileImageCorrect =
+              signUpUserData.profileImageFile != null;
+            const isUsernameCorrect = checkUsername(signUpUserData.username);
+            const isBioCorrect = checkBio(signUpUserData.bio);
 
-        <button onClick={onSubmit}>정보 입력 완료</button>
+            if (isBioCorrect && isUsernameCorrect && isProfileImageCorrect)
+              onSubmit();
+          }}
+        >
+          정보 입력 완료
+        </button>
       </Container>
     </BottomSheet>
   );

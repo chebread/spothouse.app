@@ -1,6 +1,6 @@
 const checkPwFormat = (pw: string) => {
-  const pwRegexp = /(?=.*\d)(?=.*[a-z]).{8,}/gi;
-  const matchesArray = pw.match(pwRegexp);
+  const regexp = /(?=.*\d)(?=.*[a-z]).{8,}/gi;
+  const matchesArray = pw.match(regexp);
   if (matchesArray === null) return false;
   else return true;
 };

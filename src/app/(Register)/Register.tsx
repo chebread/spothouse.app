@@ -41,48 +41,44 @@ const Register = () => {
     }
   };
   const onSubmit = async () => {
-    const isEmailCorrect = checkEmailFormat(userEmail);
-    const isPwCorrect = checkPwFormat(userPw);
-    if (isEmailCorrect && isPwCorrect) {
-      const { data } = await supabase.auth.signInWithPassword({
+    const { data } = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: userPw,
+    });
+    // 로그인
+    if (data.user != null) {
+      // 로그인 성공
+      console.log('로그인 성공');
+      loadUserData(data.user.id)
+        .then(userData => {
+          setCurrentUserData(userData);
+          setIsLoggedIn(true);
+        })
+        .catch(error => {
+          const uid = data.user.id;
+          setUid(uid);
+          setIsSignedUp(true);
+        });
+    }
+    // 이미 존재하는 사용자가 Email or Pw 오류 발생하여 로그인 불가능 또는 존재하지 않는 사용자라 Email, pw 로그인 불가능 => 이런 모든 경우도 회원가입으로 전환되게 됨
+    // 회원가입
+    if (data.user === null) {
+      const { data, error } = await supabase.auth.signUp({
         email: userEmail,
         password: userPw,
       });
-      // 로그인
-      if (data.user != null) {
-        // 로그인 성공
-        console.log('로그인 성공');
-        loadUserData(data.user.id)
-          .then(userData => {
-            setCurrentUserData(userData);
-            setIsLoggedIn(true);
-          })
-          .catch(error => {
-            const uid = data.user.id;
-            setUid(uid);
-            setIsSignedUp(true);
-          });
-      }
-      // 이미 존재하는 사용자가 Email or Pw 오류 발생하여 로그인 불가능 또는 존재하지 않는 사용자라 Email, pw 로그인 불가능 => 이런 모든 경우도 회원가입으로 전환되게 됨
-      // 회원가입
-      if (data.user === null) {
-        const { data, error } = await supabase.auth.signUp({
-          email: userEmail,
-          password: userPw,
-        });
 
-        if (data.user != null) {
-          // 회원가입 성공
-          const uid = data.user.id;
-          setUid(uid);
-          console.log('회원가입 성공');
-          setIsSignedUp(true);
-        }
-        if (data.user === null) {
-          // 회원가입 오류 발생
-          // 이미 있는 사용자라서 => 비밀번호 오류 or 비밀번호 조건 충족 시키지 못할 시 (이건 여기서 처리)
-          alert('이메일 혹은 이메일이 틀려 로그인 할 수 없습니다.');
-        }
+      if (data.user != null) {
+        // 회원가입 성공
+        const uid = data.user.id;
+        setUid(uid);
+        console.log('회원가입 성공');
+        setIsSignedUp(true);
+      }
+      if (data.user === null) {
+        // 회원가입 오류 발생
+        // 이미 있는 사용자라서 => 비밀번호 오류 or 비밀번호 조건 충족 시키지 못할 시 (이건 여기서 처리)
+        alert('이메일 혹은 이메일이 틀려 로그인 할 수 없습니다.');
       }
     }
   };
@@ -110,7 +106,10 @@ const Register = () => {
             placeholder="비밀번호"
           />
           <SubmitBtn
-            onClick={onSubmit}
+            onClick={() => {
+              if (checkEmailFormat(userEmail) && checkPwFormat(userPw))
+                onSubmit();
+            }}
             $isFilled={checkEmailFormat(userEmail) && checkPwFormat(userPw)}
           >
             로그인 및 회원가입
