@@ -110,7 +110,7 @@ const RegisterForm = () => {
               if (checkEmailFormat(userEmail) && checkPwFormat(userPw))
                 onSubmit();
             }}
-            $isFilled={checkEmailFormat(userEmail) && checkPwFormat(userPw)}
+            $isCorrect={checkEmailFormat(userEmail) && checkPwFormat(userPw)}
           >
             로그인 및 회원가입
           </SubmitBtn>
@@ -169,9 +169,9 @@ const TextInput = styled.input`
     color: #999999;
   }
 `;
-const SubmitBtn = styled.button<{ $isFilled: boolean }>`
+const SubmitBtn = styled.button<{ $isCorrect: boolean }>`
   all: unset;
-  cursor: pointer;
+  cursor: ${({ $isCorrect }) => ($isCorrect ? 'pointer' : 'not-allowed')};
   ${disableHighlight}
   ${disableSelection}
 
@@ -189,7 +189,7 @@ const SubmitBtn = styled.button<{ $isFilled: boolean }>`
   padding: 1rem;
   border-radius: 12px;
   background-color: #000;
-  color: ${({ $isFilled }) => ($isFilled ? '#fff' : '#616161')}; // #A1A1A1
+  color: ${({ $isCorrect }) => ($isCorrect ? '#fff' : '#616161')}; // #A1A1A1
   box-sizing: border-box;
 
   &:active {

@@ -1,8 +1,13 @@
-import License from 'app/(Policy)/License';
-import Privacy from 'app/(Policy)/Privacy';
-import Terms from 'app/(Policy)/Terms';
+import License from 'app/(About)/License';
+import Privacy from 'app/(About)/Privacy';
+import Terms from 'app/(About)/Terms';
 import Preferences from 'app/(Preferences)';
 import BottomSheet from 'components/BottomSheet';
+import {
+  BottomSheetFooter,
+  BottomSheetFooterBtn,
+} from 'components/BottomSheet/BottomSheetFooter';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
@@ -20,13 +25,30 @@ const Settings = () => {
     <BottomSheet
       open={true}
       onDismiss={onDismiss}
-      header="설정"
+      header={(() => {
+        switch (paramSettings) {
+          case '':
+            return '설정';
+          case 't':
+            return '서비스 이용약관';
+          case 'p':
+            return '개인정보 취급 방침';
+          case 'l':
+            return '오픈소스 라이센스';
+          default:
+            return null;
+        }
+      })()}
       footer={
-        <Footer>
-          <button>
-            <span>뒤로가기</span>
-          </button>
-        </Footer>
+        paramSettings != '' ? (
+          <BottomSheetFooter>
+            <BottomSheetFooterBtn as={Link} href="/?s">
+              <span>뒤로가기</span>
+            </BottomSheetFooterBtn>
+          </BottomSheetFooter>
+        ) : (
+          ''
+        )
       }
     >
       {(() => {
@@ -46,37 +68,5 @@ const Settings = () => {
     </BottomSheet>
   );
 };
-
-const Footer = styled.div`
-  display: flex;
-  justify-content: center;
-  button {
-    all: unset;
-    cursor: pointer;
-
-    transition-property: transform background-color;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-out;
-
-    background-color: rgb(245, 245, 245);
-    box-sizing: border-box;
-    border: 1px solid rgb(203, 213, 225);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 1rem;
-    width: 640px;
-    height: 3rem;
-    &:active {
-      background-color: rgb(235, 235, 235);
-      transform: scale(0.96);
-    }
-    span {
-      font-size: 1rem;
-      line-height: 130%;
-      font-weight: 600;
-    }
-  }
-`;
 
 export default Settings;

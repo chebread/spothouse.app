@@ -2,6 +2,7 @@ import { isMenuClickedAtom } from 'atom/mapAtom';
 import BottomSheet from 'components/BottomSheet';
 import { useAtom } from 'jotai';
 import Link from 'next/link';
+import styled from 'styled-components';
 
 const MobileMenuModal = ({ onDismiss, onLogout }) => {
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
@@ -13,24 +14,35 @@ const MobileMenuModal = ({ onDismiss, onLogout }) => {
 
   return (
     <BottomSheet open={isMenuClicked} onDismiss={onDismiss}>
-      <Link href="/?s" onClick={onMenu}>
-        설정
-      </Link>
-
-      <Link href="/?n" onClick={onMenu}>
-        알림
-      </Link>
-
-      <button
-        onClick={() => {
-          onMenu();
-          onLogout();
-        }}
-      >
-        로그아웃
-      </button>
+      <Container>
+        <Menu as={Link} href="/?s" onClick={onMenu}>
+          <span>설정</span>
+        </Menu>
+        <Menu as={Link} href="/?n" onClick={onMenu}>
+          <span>알림</span>
+        </Menu>
+        <Menu as={Link} href="/?a" onClick={onMenu}>
+          <span>정보</span>
+        </Menu>
+      </Container>
     </BottomSheet>
   );
 };
+
+const Menu = styled.button`
+  all: unset;
+  cursor: pointer;
+  padding: 1rem;
+  &:active {
+    background-color: #efefef;
+  }
+  span {
+    font-size: 1rem;
+  }
+`;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default MobileMenuModal;

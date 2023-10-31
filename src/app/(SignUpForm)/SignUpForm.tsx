@@ -8,6 +8,10 @@ import {
   signUpUserDataAtom,
 } from 'atom/authAtom';
 import BottomSheet from 'components/BottomSheet';
+import {
+  BottomSheetFooter,
+  BottomSheetFooterBtn,
+} from 'components/BottomSheet/BottomSheetFooter';
 import { useAtom } from 'jotai';
 import checkBio from 'lib/checkBio';
 import checkUsername from 'lib/checkUsername';
@@ -89,16 +93,14 @@ const SignUp = () => {
       };
     });
   };
+
+  console.log(checkBio(signUpUserData.bio));
+
   // 회원가입 최종 진행
   const onSubmit = () => {
     const isProfileImageCorrect = signUpUserData.profileImageFile != null;
-    console.log(signUpUserData.profileImageFile);
-
     const isUsernameCorrect = checkUsername(signUpUserData.username);
-    console.log(isUsernameCorrect);
-
     const isBioCorrect = checkBio(signUpUserData.bio);
-    console.log(isBioCorrect);
 
     if (isProfileImageCorrect && isUsernameCorrect && isBioCorrect) {
       signUp({
@@ -117,43 +119,48 @@ const SignUp = () => {
         });
     }
   };
+  console.log(checkUsername(signUpUserData.username));
+
   return (
     <BottomSheet
       open={true}
-      snapPoints={({ maxHeight }) => maxHeight - maxHeight / 15}
+      snapPoints={({ minHeight }) => minHeight}
+      header="회원가입"
+      footer={
+        <BottomSheetFooter>
+          <FooterBtn
+            $isCorrect={
+              signUpUserData.profileImageFile != null &&
+              checkUsername(signUpUserData.username) &&
+              checkBio(signUpUserData.bio)
+            }
+            onClick={() => {
+              onSubmit();
+            }}
+          >
+            <span>가입하기</span>
+          </FooterBtn>
+        </BottomSheetFooter>
+      }
     >
       <Container>
-        <h1>회원가입을 위해 아래의 정보를 입력해주세요.</h1>
-        <h2>이름</h2>
-        <p>
-          한글 혹은 알바벳을 꼭 입력하세요. 단 띄어쓰기는 할 수 없으며, 하이픈
-          혹은 언더바를 사용하여 이름을 작성해주세요.
-        </p>
+        <h2></h2>
         <input
-          maxLength={50}
           type="text"
           value={signUpUserData.username}
           onChange={onChange}
+          placeholder="이름"
           id="username"
         />
-        <h2>소개글</h2>
-        <p>
-          소개글은 비워둘 수도 있습니다. 그리고 링크를 기입할 수도 있습니다.
-          150자 이하로 작성해주세요.
-        </p>
-        <input
-          maxLength={150}
-          type="text"
+        <h2></h2>
+        <textarea
+          placeholder="소개글"
           value={signUpUserData.bio}
           onChange={onChange}
           id="bio"
         />
-        <h2>프로필 사진</h2>
-        <p>
-          10MB가 초과되지 않는 이미지를 선택하여 프로필 사진으로 꼭
-          등록해주세요. 프로필 사진이 Spothouse의 규정에 어긋나는 경우 해당
-          사용자는 서비스 사용이 중단될 수 있으므로 유의하시기 바랍니다.
-        </p>
+        <h2></h2>
+
         <Dropzone
           onDrop={onDropFile}
           accept={fileAcceptTypes}
@@ -176,23 +183,18 @@ const SignUp = () => {
             );
           }}
         </Dropzone>
-        <button
-          onClick={() => {
-            const isProfileImageCorrect =
-              signUpUserData.profileImageFile != null;
-            const isUsernameCorrect = checkUsername(signUpUserData.username);
-            const isBioCorrect = checkBio(signUpUserData.bio);
-
-            if (isBioCorrect && isUsernameCorrect && isProfileImageCorrect)
-              onSubmit();
-          }}
-        >
-          정보 입력 완료
-        </button>
       </Container>
     </BottomSheet>
   );
 };
 
 const Container = styled.div``;
+
+const FooterBtn = styled(BottomSheetFooterBtn)<{
+  $isCorrect: boolean;
+}>`
+  cursor: ${({ $isCorrect }) => ($isCorrect ? 'pointer' : 'not-allowed')};
+  color: ${({ $isCorrect }) => ($isCorrect ? '#000' : '#616161')};
+`;
+
 export default SignUp;

@@ -2,6 +2,8 @@ import Notifications from 'app/(Notifications)';
 import Profile from 'app/(Profile)';
 import { useSearchParams } from 'next/navigation';
 import Settings from 'components/Settings';
+import Preferences from 'app/(Preferences)';
+import About from 'app/(About)';
 
 const Router = () => {
   const searchParams = useSearchParams();
@@ -17,7 +19,9 @@ const Router = () => {
       case 'u':
         return paramUsername != '' ? <Profile /> : '';
       case 's':
-        return <Settings />;
+        return <Preferences />;
+      case 'a':
+        return <About />;
       case 'n':
         return <Notifications />;
       case 'p':

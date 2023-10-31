@@ -26,7 +26,7 @@ const Preferences = () => {
   const [currentUserData] = useAtom(currentUserDataAtom);
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom);
 
-  const onDismiss = (e: any) => {
+  const onDismiss = () => {
     router.push('/');
   };
   const onLogout = async () => {
@@ -42,26 +42,11 @@ const Preferences = () => {
   };
 
   return (
-    <>
+    <BottomSheet open={true} onDismiss={onDismiss}>
       <h2>계정</h2>
       <button onClick={onLogout}>로그아웃하기</button>
       <button onClick={confirmWithdrawal}>서비스 탈퇴하기</button>
-      <h2>정보</h2>
-      <p>
-        <Link href="/?s=t">서비스 이용약관</Link>
-      </p>
-      <p>
-        <Link href="/?s=p">개인정보 취급 방침</Link>
-      </p>
-      <p>
-        <Link href="/?s=l">오픈소스 라이센스</Link>
-      </p>
-      <p>
-        <Link href="https://github.com/chebread" target="_self">
-          만든이
-        </Link>
-      </p>
-    </>
+    </BottomSheet>
   );
 };
 

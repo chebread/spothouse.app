@@ -12,7 +12,7 @@ const BottomSheet = ({
   blocking,
   footer,
 }: {
-  children: any;
+  children?: any;
   open: boolean;
   snapPoints?: any;
   header?: ReactNode;

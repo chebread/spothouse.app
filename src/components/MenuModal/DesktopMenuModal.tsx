@@ -22,14 +22,9 @@ const DesktopMenuModal = ({ onDismiss, onLogout }) => {
           <span>알림</span>
         </MenuLink>
         <MenuHr />
-        <Menu
-          onClick={() => {
-            onDismiss();
-            onLogout();
-          }}
-        >
-          <span>로그아웃</span>
-        </Menu>
+        <MenuLink onClick={onDismiss} href="/?a">
+          정보
+        </MenuLink>
       </MenuWrapper>
     </Container>
   );
