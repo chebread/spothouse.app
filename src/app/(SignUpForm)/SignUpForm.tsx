@@ -9,9 +9,9 @@ import {
 } from 'atom/authAtom';
 import BottomSheet from 'components/BottomSheet';
 import {
-  BottomSheetFooter,
-  BottomSheetFooterBtn,
-} from 'components/BottomSheet/BottomSheetFooter';
+  FooterBtnWrapperProvider,
+  FooterBtnProvider,
+} from 'components/BottomSheet/FooterBtnProvider';
 import { useAtom } from 'jotai';
 import checkBio from 'lib/checkBio';
 import checkUsername from 'lib/checkUsername';
@@ -104,7 +104,7 @@ const SignUp = () => {
 
     if (isProfileImageCorrect && isUsernameCorrect && isBioCorrect) {
       signUp({
-        profileImageFile: signUpUserData.profileImageFile,
+        profileImage: signUpUserData.profileImageFile,
         uid: uid,
         bio: signUpUserData.bio,
         username: signUpUserData.username,
@@ -127,7 +127,7 @@ const SignUp = () => {
       snapPoints={({ minHeight }) => minHeight}
       header="회원가입"
       footer={
-        <BottomSheetFooter>
+        <FooterBtnWrapperProvider>
           <FooterBtn
             $isCorrect={
               signUpUserData.profileImageFile != null &&
@@ -138,9 +138,9 @@ const SignUp = () => {
               onSubmit();
             }}
           >
-            <span>가입하기</span>
+            <span>가입</span>
           </FooterBtn>
-        </BottomSheetFooter>
+        </FooterBtnWrapperProvider>
       }
     >
       <Container>
@@ -190,7 +190,7 @@ const SignUp = () => {
 
 const Container = styled.div``;
 
-const FooterBtn = styled(BottomSheetFooterBtn)<{
+const FooterBtn = styled(FooterBtnProvider)<{
   $isCorrect: boolean;
 }>`
   cursor: ${({ $isCorrect }) => ($isCorrect ? 'pointer' : 'not-allowed')};

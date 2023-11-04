@@ -1,5 +1,5 @@
 {
-  "name": "spothouse.app",
+  "name": "spothouse",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,18 +11,21 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.38.1",
     "@svgr/webpack": "^8.1.0",
+    "github-markdown-css": "^5.4.0",
     "idb-keyval": "^6.2.1",
     "jotai": "^2.4.3",
-    "next": "13.5.4",
+    "next": "^14.0.1",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-hot-toast": "^2.4.1",
     "react-kakao-maps-sdk": "^1.1.21",
+    "react-markdown": "^9.0.0",
     "react-spring": "^9.7.3",
     "react-spring-bottom-sheet": "^3.4.1",
     "styled-components": "^6.1.0",
     "styled-normalize": "^8.0.7",
+    "use-long-press": "^3.2.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -30,7 +33,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "13.5.4",
+    "eslint-config-next": "^14.0.1",
     "typescript": "^5"
   }
 }

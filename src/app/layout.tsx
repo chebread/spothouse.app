@@ -1,9 +1,9 @@
 import StyledComponentsRegistry from 'lib/registry';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Toaster } from 'react-hot-toast';
-import styled from 'styled-components';
-
 import GlobalStyles from 'styles/GlobalStyles';
+import 'react-spring-bottom-sheet/dist/style.css'; // for react-spring-bottom-sheet
+import 'github-markdown-css';
 
 export default function RootLayout({
   children,
@@ -32,24 +32,24 @@ export default function RootLayout({
   );
 }
 
+export const viewport: Viewport = {
+  initialScale: 1,
+  userScalable: false,
+  maximumScale: 1,
+  width: 'device-width',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000' },
+  ],
+};
 export const metadata: Metadata = {
   metadataBase: new URL('https://spothouse.app'),
-  viewport: {
-    initialScale: 1,
-    userScalable: false,
-    maximumScale: 1,
-    width: 'device-width',
-  },
   title: {
     template: '%s',
     default: 'Spothouse',
   },
   description: `위치를 찍다, Spothouse`,
   keywords: 'social media, SNS',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000' },
-  ],
   openGraph: {
     title: 'Spothouse',
     description: `위치를 찍다, Spothouse`,

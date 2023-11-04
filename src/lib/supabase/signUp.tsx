@@ -1,13 +1,13 @@
 import hashMaker from 'lib/hashMaker';
 import supabase from 'lib/supabase';
 
-const signUp = async ({ uid, username, bio, profileImageFile }) => {
+const signUp = async ({ uid, username, bio, profileImage }) => {
   const profileFileId = hashMaker();
   // upload profile image
   const { data: uploadStorage, error: uploadStorageError } =
     await supabase.storage
       .from('profile_images')
-      .upload(profileFileId, profileImageFile);
+      .upload(profileFileId, profileImage);
 
   if (uploadStorageError) {
     throw new Error('file을 storage에 업로드중 오류 발생');

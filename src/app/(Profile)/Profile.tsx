@@ -9,7 +9,9 @@ import ProfileImageViewer from 'components/ProfileImageViewer';
 import SeeMore from 'components/SeeMore';
 import disableSelection from 'styles/disableSelection';
 import disableHighlight from 'styles/disableHighlight';
-import BottomSheet from 'components/BottomSheet';
+import { BottomSheet as BottomSheetProvider } from 'react-spring-bottom-sheet';
+import { useLongPress } from 'use-long-press';
+import EditProfileModal from 'components/EditProfileModal';
 
 // (0): 아래로 내릴 수 있는 기능 추가하기
 // (0): 프로필이 자신인지 확인하는 기능 추가하기 => 더보기 클릭시 모달이 뜨고, 거기서 팔로워, 팔로잉 볼 수 있고 관리 가능함
@@ -17,6 +19,8 @@ import BottomSheet from 'components/BottomSheet';
 // (0): 프로필 사진 누르면 큰 화면으로 프로필 사진이 뜸 (모달로서), 길게 누르면 위와 같은 기능이 작동함 (수정기능)
 // (0): X 버튼 추가하기 (오직 데스크탑만)
 // (0): Threads 처럼 구성하기 (아래에서 위로 나오는 것 처럼)
+
+// (0): 아예 새로운 맵을 띄우자! @로 바꾸고!!!
 
 const Profile = () => {
   const router = useRouter();
@@ -29,6 +33,21 @@ const Profile = () => {
   const [isFollowing, setIsFollowing] = useState(false); // 내가 팔로잉 하는 사람인지
   const [isSeeMoreClicked, setIsSeeMoreClicked] = useState(false);
   const [isProfileImageClicked, setIsProfileImageClicked] = useState(false);
+  const [isEditClicked, setIsEditClicked] = useState(false);
+
+  const bind = useLongPress(
+    () => {
+      if (isPersonalProfile) {
+        setIsEditClicked(!isEditClicked);
+      }
+    },
+    {
+      threshold: 350,
+      captureEvent: true,
+      cancelOnMovement: false, // 아이템 내부에서 움직이면 그것은 취소되지 않음
+      cancelOutsideElement: true,
+    }
+  );
 
   useEffect(() => {
     const onLoad = async () => {
@@ -54,91 +73,108 @@ const Profile = () => {
   }, [paramUsername]);
 
   const onFollow = (e: any) => {
-    e.stopPropagation();
     setIsFollowing(!isFollowing);
   };
-  const onClose = (e: any) => {
+  const onClose = () => {
     router.push('/');
   };
   const onProfileImageClick = (e: any) => {
-    e.stopPropagation();
     setIsProfileImageClicked(!isProfileImageClicked);
   };
   const onMoreSee = (e: any) => {
-    e.stopPropagation();
     setIsSeeMoreClicked(!isSeeMoreClicked);
   };
-  const onUsernameClick = (e: any) => {
-    e.stopPropagation();
-    if (isPersonalProfile) {
-      //
-    }
-  };
-  const onBioClick = (e: any) => {
-    e.stopPropagation();
-    if (isPersonalProfile) {
-      //
-    }
-  };
+  const onEdit = () => {};
 
   return (
     <>
-      <BottomSheet open={isUserExisted} blocking={false} onDismiss={onClose}>
-        <Container>
-          <LeftWrapper>
-            <ProfileImage
-              style={{
-                backgroundImage: `url(${userData.profileFileUrl})`,
-              }}
-              onClick={onProfileImageClick}
-            ></ProfileImage>
-            <InfoWrapper>
-              <UsernameWrapper>
-                <Username
-                  onClick={onUsernameClick}
-                  $isPersonalProfile={isPersonalProfile}
-                >
-                  {userData.username}
-                </Username>
-              </UsernameWrapper>
-              <BioWrapper>
-                <Bio
-                  onClick={onBioClick}
-                  $isPersonalProfile={isPersonalProfile}
-                >
-                  {userData.bio}
-                </Bio>
-              </BioWrapper>
-            </InfoWrapper>
-          </LeftWrapper>
-          <RightWrapper>
-            {isPersonalProfile ? (
+      <BottomSheet
+        open={isUserExisted}
+        blocking={false}
+        onDismiss={onClose}
+        onClick={onClose}
+      >
+        <Wrapper onClick={e => e.stopPropagation()}>
+          <Container>
+            <LeftWrapper>
+              <ProfileImage
+                {...bind()}
+                style={{
+                  backgroundImage: `url(${userData.profileFileUrl})`,
+                }}
+                onClick={onProfileImageClick}
+              ></ProfileImage>
+              <InfoWrapper>
+                <UsernameWrapper>
+                  <Username {...bind()} $isPersonalProfile={isPersonalProfile}>
+                    {userData.username}
+                  </Username>
+                </UsernameWrapper>
+                <BioWrapper>
+                  <Bio {...bind()} $isPersonalProfile={isPersonalProfile}>
+                    {userData.bio}
+                  </Bio>
+                </BioWrapper>
+              </InfoWrapper>
+            </LeftWrapper>
+            <RightWrapper>
+              {isPersonalProfile ? (
+                ''
+              ) : (
+                <>
+                  <FollowBtn onClick={onFollow} $isFollowing={isFollowing}>
+                    {isFollowing ? '팔로잉' : '팔로우'}
+                  </FollowBtn>
+                </>
+              )}
               <MoreSeeBtn onClick={onMoreSee}>더보기</MoreSeeBtn>
-            ) : (
-              <>
-                <FollowBtn onClick={onFollow} $isFollowing={isFollowing}>
-                  {isFollowing ? '팔로잉' : '팔로우'}
-                </FollowBtn>
-              </>
-            )}
-          </RightWrapper>
-        </Container>
+            </RightWrapper>
+          </Container>
+        </Wrapper>
       </BottomSheet>
-      {isSeeMoreClicked ? <SeeMore /> : ''}
-      {isProfileImageClicked ? (
-        <ProfileImageViewer
-          src={userData.profileFileUrl}
-          onClick={onProfileImageClick}
-        />
-      ) : (
-        ''
-      )}
+      <EditProfileModal
+        open={isEditClicked}
+        onDismiss={() => setIsEditClicked(!isEditClicked)}
+      />
+      <SeeMore
+        uid={userData.uid}
+        open={isSeeMoreClicked}
+        onDismiss={() => setIsSeeMoreClicked(!isSeeMoreClicked)}
+      />
+      <ProfileImageViewer
+        visible={isProfileImageClicked}
+        src={userData.profileFileUrl}
+        onDismiss={onProfileImageClick}
+      />
     </>
   );
 };
 
+const BottomSheet = styled(BottomSheetProvider)`
+  // 모달
+  [data-rsbs-overlay] {
+    z-index: 1;
+    box-shadow: 0 -10.5px 21px rgba(0, 0, 0, 0.08);
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+  }
+  // 배경 설정
+  [data-rsbs-backdrop] {
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  // 헤더
+  [data-rsbs-header] {
+  }
+`;
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
 const Container = styled.div`
-  max-width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
   height: 100%;
   box-sizing: border-box;
   padding: 1rem; // padding: 1rem / padding: 0 1rem 1rem 1rem
@@ -166,14 +202,13 @@ const RightWrapper = styled.div`
   align-items: center;
   gap: 0.5rem;
 `;
+
 const MoreSeeBtn = styled.button`
   all: unset;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
+  will-change: transform;
+  ${disableHighlight}
+  ${disableSelection}
 
   font-size: 0.9rem;
   padding: 0.5rem;
@@ -195,6 +230,7 @@ const MoreSeeBtn = styled.button`
 const FollowBtn = styled.button<{ $isFollowing: boolean }>`
   all: unset;
   cursor: pointer;
+  will-change: transform;
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-touch-callout: none;
@@ -232,7 +268,7 @@ const UsernameWrapper = styled.div`
 `;
 const Username = styled.span<{ $isPersonalProfile?: boolean }>`
   cursor: ${({ $isPersonalProfile }) =>
-    $isPersonalProfile ? 'pointer' : 'text'};
+    $isPersonalProfile ? 'pointer' : 'auto'};
   ${disableHighlight}
   ${({ $isPersonalProfile }) =>
     $isPersonalProfile ? `${disableSelection}` : ''};
@@ -253,7 +289,7 @@ const BioWrapper = styled.div`
   display: block;
   width: auto;
 `;
-const Bio = styled.p<{ $isPersonalProfile?: boolean }>`
+const Bio = styled.span<{ $isPersonalProfile?: boolean }>`
   cursor: ${({ $isPersonalProfile }) =>
     $isPersonalProfile ? 'pointer' : 'text'};
   ${disableHighlight}
@@ -273,6 +309,7 @@ const Bio = styled.p<{ $isPersonalProfile?: boolean }>`
 const ProfileImage = styled.div`
   all: unset;
   cursor: pointer;
+  will-change: transform;
   ${disableHighlight}
   ${disableSelection}
 

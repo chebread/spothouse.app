@@ -15,7 +15,6 @@ const Notifications = () => {
 
   return (
     <BottomSheet open={true} onDismiss={onDismiss} header="알림">
-      <h1>알림</h1>
       <h2>팔로잉 알림</h2>
       <p>내가 팔로잉 한 사람들이 장소를 추가하지 않았습니다.</p>
       <h2>팔로워 알림</h2>

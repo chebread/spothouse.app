@@ -9,19 +9,23 @@ import {
   addedPosAtom,
   centerPosAtom,
   currentPosAtom,
-  isAddedAtom,
   isApproximatePosLoadedAtom,
   isCurrentPosLoadedAtom,
   isDataLoadedAtom,
   isFocusedAtom,
   isMenuClickedAtom,
   isMovedAtom,
+  isPostSearchClickedAtom,
+  isSearchClickedAtom,
+  isUploadClickedAtom,
   zoomLevelAtom,
 } from 'atom/mapAtom';
 import MenuModal from 'components/MenuModal';
-import AddSpotModal from 'components/SpotingModal';
+import UploadSpotModal from 'components/UploadSpotModal';
 import FeedHeader from 'components/FeedHeader';
 import FeedMap from 'components/FeedMap';
+import SearchModal from 'app/(Search)';
+import FeedTabBar from 'components/FeedTabBar';
 
 // (0): /#u/(USERNAME) 의 형태로 바꾸기
 // (0): 플러스 누르면 현재위치의 스팟이 추가됨. 지도상에서 꾹 누르거나 더블 클릭하면 그 위치에서 스팟이 추가됨! (장소만 다르지 기능적 측면은 완전일치함) => 현재위치 추가의 국한되지 않기!
@@ -48,8 +52,8 @@ const Feed = () => {
   const [watcher, setWatcher] = useState<any>();
   const [isDataLoaded, setIsDataLoaded] = useAtom(isDataLoadedAtom); // 데이터 로딩 되었는가? => isMoved시 false됨
   const [isMoved, setIsMoved] = useAtom(isMovedAtom); // 사용자가 지도를 움직일 시 => 다시 데이터 로딩 필요!
-  const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false); // Search 버튼 클릭시
-  const [isAdded, setIsAdded] = useAtom(isAddedAtom); // 위치 추가 토글
+  // const [isSearchClicked, setIsSearchClicked] = useAtom(isSearchClickedAtom); // Search 버튼 클릭시
+  const [isUploadClicked, setIsUploadClicked] = useAtom(isUploadClickedAtom); // 위치 추가 토글
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
   const [currentUserData] = useAtom(currentUserDataAtom);
   const [markers, setMarkers] = useState({});
@@ -132,14 +136,20 @@ const Feed = () => {
             <FeedMap />
             {/* 헤더 */}
             <FeedHeader />
+            {/* 탭바 */}
+            <FeedTabBar />
             {/* 모달 */}
             <MenuModal />
-            <AddSpotModal
-              open={isAdded}
+            <UploadSpotModal
+              open={isUploadClicked}
               lat={addedPos.lat}
               lng={addedPos.lng}
-              onDismiss={() => setIsAdded(!isAdded)}
+              onDismiss={() => setIsUploadClicked(!isUploadClicked)}
             />
+            {/* <SearchModal
+              open={isSearchClicked}
+              onDismiss={() => setIsSearchClicked(!isSearchClicked)}
+            /> */}
           </>
         ) : (
           <Loading />

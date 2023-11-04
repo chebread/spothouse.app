@@ -172,6 +172,7 @@ const TextInput = styled.input`
 const SubmitBtn = styled.button<{ $isCorrect: boolean }>`
   all: unset;
   cursor: ${({ $isCorrect }) => ($isCorrect ? 'pointer' : 'not-allowed')};
+  will-change: transform;
   ${disableHighlight}
   ${disableSelection}
 

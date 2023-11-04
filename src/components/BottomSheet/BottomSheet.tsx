@@ -1,6 +1,5 @@
 import { BottomSheet as BottomSheetProvider } from 'react-spring-bottom-sheet';
 import styled from 'styled-components';
-import 'react-spring-bottom-sheet/dist/style.css';
 import { ReactNode } from 'react';
 
 const BottomSheet = ({
@@ -31,7 +30,7 @@ const BottomSheet = ({
       blocking={blocking}
       footer={footer}
     >
-      <Wrapper>{children}</Wrapper>
+      <Content>{children}</Content>
     </Container>
   );
 };
@@ -47,7 +46,7 @@ const Container = styled(BottomSheetProvider)`
   // 모달
   [data-rsbs-overlay] {
     z-index: 1;
-    box-shadow: 0 -10.5px 21px rgba(0, 0, 0, 0.08);
+    box-shadow: none; // 0 -10.5px 21px rgba(0, 0, 0, 0.08)
     border-top-left-radius: 1.5rem;
     border-top-right-radius: 1.5rem;
   }
@@ -60,7 +59,11 @@ const Container = styled(BottomSheetProvider)`
   [data-rsbs-header] {
   }
 `;
-const Wrapper = styled.div`
+// const Wrapper = styled.div`
+//   width: 100%;
+//   height: 100%;
+// `;
+const Content = styled.div`
   max-width: 640px;
   margin: 0 auto;
 `;

@@ -4,14 +4,13 @@
 import styled from 'styled-components';
 import CancelIcon from 'assets/CancelIcon.svg';
 
-const ProfileImageViewer = ({ src, onClick }) => {
+const ProfileImageViewer = ({ visible, onDismiss, src }) => {
   return (
-    <Container onClick={onClick}>
-      <CancelBtnWrapper>
-        <CancelBtn>
-          <CancelIcon />
-        </CancelBtn>
-      </CancelBtnWrapper>
+    <Container $visible={visible} onClick={onDismiss}>
+      <CancelBtn>
+        <CancelIcon />
+      </CancelBtn>
+
       <ProfileImage
         style={{
           backgroundImage: `url(${src})`,
@@ -23,15 +22,16 @@ const ProfileImageViewer = ({ src, onClick }) => {
     </Container>
   );
 };
-
-const CancelBtnWrapper = styled.div`
-  position: absolute;
-  top: 2.5rem;
-  left: 2.5rem;
-`;
+const CancelBtnWrapper = styled.div``;
 const CancelBtn = styled.button`
   all: unset;
   cursor: pointer;
+  will-change: transform;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 2rem;
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
@@ -39,6 +39,8 @@ const CancelBtn = styled.button`
   justify-content: center;
   align-items: center;
 
+  padding: 1rem;
+  border-radius: 50%;
   background-color: transparent; // rgb(239, 239, 239)
 
   transition-property: transform;
@@ -54,7 +56,7 @@ const CancelBtn = styled.button`
 `;
 const ProfileImage = styled.div`
   all: unset;
-  cursor: pointer;
+  will-change: transform;
 
   background-color: #fff;
 
@@ -62,7 +64,9 @@ const ProfileImage = styled.div`
   background-position: center;
   background-size: cover;
 
-  /* transition-property: transform;
+  /*
+  cursor: pointer;
+  transition-property: transform;
   transition-duration: 0.2s;
   transition-timing-function: ease-out;
 
@@ -76,7 +80,10 @@ const ProfileImage = styled.div`
   border-radius: 50%;
   box-shadow: 0 10.5px 21px rgba(0, 0, 0, 0.08);
 `;
-const Container = styled.div`
+const Container = styled.div<{ $visible: boolean }>`
+  will-change: transform;
+
+  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
   position: fixed;
   z-index: 2;
   // 제일 높은 위치의 z-index
@@ -88,8 +95,7 @@ const Container = styled.div`
   width: 100%;
   backdrop-filter: blur(2rem);
   -webkit-backdrop-filter: blur(2rem);
-  background-color: rgba(255, 255, 255, 0.85);
-  display: flex;
+  background-color: rgba(255, 255, 255, 0.55); // 0.85
   justify-content: center;
   align-items: center;
 
@@ -109,5 +115,4 @@ const Container = styled.div`
     }
   }
 `;
-
 export default ProfileImageViewer;

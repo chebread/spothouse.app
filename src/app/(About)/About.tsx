@@ -4,10 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Terms from './Terms';
 import Privacy from './Privacy';
 import License from './License';
-import {
-  BottomSheetFooter,
-  BottomSheetFooterBtn,
-} from 'components/BottomSheet/BottomSheetFooter';
+import BottomSheetFooter from 'components/BottomSheet/FooterBtn';
 
 const About = () => {
   const router = useRouter();
@@ -22,12 +19,17 @@ const About = () => {
     <BottomSheet
       open={true}
       onDismiss={onDismiss}
+      snapPoints={({ minHeight, maxHeight }) => {
+        if (paramAbout === '') {
+          return minHeight;
+        } else {
+          return maxHeight - maxHeight / 15;
+        }
+      }}
       footer={
         paramAbout != '' ? (
-          <BottomSheetFooter>
-            <BottomSheetFooterBtn as={Link} href="/?a">
-              <span>뒤로가기</span>
-            </BottomSheetFooterBtn>
+          <BottomSheetFooter as={Link} href="/?a">
+            뒤로가기
           </BottomSheetFooter>
         ) : (
           ''
@@ -53,7 +55,6 @@ const About = () => {
           case '':
             return (
               <>
-                <h2>정보</h2>
                 <p>
                   <Link href="/?a=t">서비스 이용약관</Link>
                 </p>

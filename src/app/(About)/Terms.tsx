@@ -1,14 +1,9 @@
-import Link from 'next/link';
-import styled from 'styled-components';
+import MarkdownViewer from 'components/About/MarkdownViewer';
 
 const Terms = () => {
-  return (
-    <>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eius explicabo
-      ullam, aliquam sit molestias incidunt beatae fugit porro ut libero ad,
-      distinctio eaque dolorem quos quibusdam voluptates dicta nihil hic?
-    </>
-  );
+  const terms = ``;
+
+  return <MarkdownViewer>{terms}</MarkdownViewer>;
 };
 
 export default Terms;

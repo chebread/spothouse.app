@@ -3,11 +3,13 @@ import {
   addedPosAtom,
   centerPosAtom,
   currentPosAtom,
-  isAddedAtom,
   isApproximatePosLoadedAtom,
   isFocusedAtom,
   isMenuClickedAtom,
   isMovedAtom,
+  isPostSearchClickedAtom,
+  isSearchClickedAtom,
+  isUploadClickedAtom,
 } from 'atom/mapAtom';
 import { useAtom } from 'jotai';
 import { useSearchParams } from 'next/navigation';
@@ -16,6 +18,7 @@ import NavigationIcon from 'assets/NavigationIcon.svg';
 import FilledNavigationIcon from 'assets/FilledNavigationIcon.svg';
 import MenuIcon from 'assets/MenuIcon.svg';
 import AddIcon from 'assets/AddIcon.svg';
+import SearchIcon from 'assets/SearchIcon.svg';
 import { useState } from 'react';
 import styled from 'styled-components';
 import disableHighlight from 'styles/disableHighlight';
@@ -29,12 +32,16 @@ const FeedHeader = () => {
   const [isMoved, setIsMoved] = useAtom(isMovedAtom); // 사용자가 지도를 움직일 시 => 다시 데이터 로딩 필요!
   const [isFocused, setIsFocused] = useAtom(isFocusedAtom); // 사용자 위치 추적
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
-  const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
+  // const [isSearchClicked, setIsSearchClicked] = useAtom(isSearchClickedAtom);
+  const [isPostSearchClicked, setIsPostSearchClicked] = useAtom(
+    isPostSearchClickedAtom
+  );
+  // (0): uploadedPos로 바꾸자!
   const [addedPos, setAddedPos] = useAtom(addedPosAtom); // 추가한 위치 정보
   const [isApproximatePosLoaded, setIsApproximatePosLoaded] = useAtom(
     isApproximatePosLoadedAtom
   ); // 대략 위치 로드시
-  const [isAdded, setIsAdded] = useAtom(isAddedAtom); // 위치 추가 토글
+  const [isUploadClicked, setIsUploadClicked] = useAtom(isUploadClickedAtom); // 위치 추가 토글
   const [currentPos, setCurrentPos] = useAtom(currentPosAtom); // 현재 위치 정보
   const [centerPos, setCenterPos] = useAtom(centerPosAtom); // Map center 위치 정보
 
@@ -42,20 +49,20 @@ const FeedHeader = () => {
   const onMenu = () => {
     setIsMenuClicked(!isMenuClicked);
   };
-  // 검색 클릭시
-  const onSearch = () => {
-    setIsSearchClicked(true);
+  // 게시물 검색 클릭시
+  const onPostSearch = () => {
+    setIsPostSearchClicked(true);
     // test code //
     setTimeout(() => {
       // 데이터 페칭 완료시
-      setIsSearchClicked(false);
+      setIsPostSearchClicked(false);
       setIsMoved(false);
     }, 1000);
   };
   // 현재 위치 추가
-  const onAddCurrentSpot = async () => {
+  const onUpload = async () => {
     if (isApproximatePosLoaded) {
-      setIsAdded(true);
+      setIsUploadClicked(true);
       const lat = currentPos.lat;
       const lng = currentPos.lng;
       setCenterPos({
@@ -68,6 +75,7 @@ const FeedHeader = () => {
       });
     }
   };
+  // 현재 위치 추적 기능
   const onFocus = () => {
     if (isApproximatePosLoaded) {
       setCenterPos({
@@ -76,60 +84,70 @@ const FeedHeader = () => {
       });
     }
   };
+  // 찾기 기능
+  // const onSearch = () => {
+  //   setIsSearchClicked(!isSearchClicked);
+  // };
 
   return (
-    <BtnWrapper>
-      <LeftBtnWrapper>
-        <MenuBtn
-          onClick={(e: any) => {
-            onMenu();
-          }}
-        >
-          <MenuIcon />
-        </MenuBtn>
-        <ProfileBtn
-          href={
-            paramUsername === currentUserData.username
-              ? '/'
-              : `?u=${currentUserData.username}`
-          }
-          style={{
-            backgroundImage: `url(${currentUserData.profileFileUrl})`,
-          }}
-        ></ProfileBtn>
-      </LeftBtnWrapper>
-      <CenterBtnWrapper>
-        {isMoved ? (
-          <SearchBtnWrapper>
-            <SearchBtn
-              onClick={(e: any) => {
-                onSearch();
-              }}
-            >
-              {isSearchClicked ? '읽어들이는 중...' : '이 지역 검색'}
-            </SearchBtn>
-          </SearchBtnWrapper>
-        ) : (
-          ''
-        )}
-      </CenterBtnWrapper>
-      <RightBtnWrapper>
-        <AddBtn onClick={onAddCurrentSpot}>
-          <AddIcon />
-        </AddBtn>
-        <FocusBtn
-          onClick={(e: any) => {
-            onFocus();
-            setIsFocused(true);
-          }}
-        >
-          {isFocused ? <FilledNavigationIcon /> : <NavigationIcon />}
-        </FocusBtn>
-      </RightBtnWrapper>
-    </BtnWrapper>
+    <Container>
+      <BtnWrapper>
+        <LeftBtnWrapper>
+          <MenuBtn
+            onClick={(e: any) => {
+              onMenu();
+            }}
+          >
+            <MenuIcon />
+          </MenuBtn>
+          <ProfileBtn
+            href={
+              paramUsername === currentUserData.username
+                ? '/'
+                : `?u=${currentUserData.username}`
+            }
+            style={{
+              backgroundImage: `url(${currentUserData.profileFileUrl})`,
+            }}
+          ></ProfileBtn>
+        </LeftBtnWrapper>
+        <CenterBtnWrapper>
+          {isMoved ? (
+            <PostSearchBtnWrapper>
+              <PostSearchBtn
+                onClick={(e: any) => {
+                  onPostSearch();
+                }}
+              >
+                {isPostSearchClicked ? '읽어들이는 중...' : '이 지역 검색'}
+              </PostSearchBtn>
+            </PostSearchBtnWrapper>
+          ) : (
+            ''
+          )}
+        </CenterBtnWrapper>
+        <RightBtnWrapper>
+          <UploadBtn onClick={onUpload}>
+            <AddIcon />
+          </UploadBtn>
+          <SearchBtn as={Link} href="/?sh">
+            <SearchIcon />
+          </SearchBtn>
+          <FocusBtn
+            onClick={(e: any) => {
+              onFocus();
+              setIsFocused(true);
+            }}
+          >
+            {isFocused ? <FilledNavigationIcon /> : <NavigationIcon />}
+          </FocusBtn>
+        </RightBtnWrapper>
+      </BtnWrapper>
+    </Container>
   );
 };
 
+const Container = styled.div``;
 const BtnWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -155,8 +173,9 @@ const CenterBtnWrapper = styled(BtnWrapper)`
   justify-content: center;
   margin: 1rem 0;
 `;
-const SearchBtnWrapper = styled.div`
-  // (0): 나타날때 부드럽게 나타나기, 사라질때는 부드럽게 하지 않아도 됨
+const PostSearchBtnWrapper = styled.div`
+  will-change: transform;
+
   z-index: 1;
   animation-duration: 0.2s;
   animation-timing-function: ease-out;
@@ -174,9 +193,10 @@ const SearchBtnWrapper = styled.div`
     }
   }
 `;
-const SearchBtn = styled.button`
+const PostSearchBtn = styled.button`
   all: unset;
   cursor: pointer;
+  will-change: transform;
   ${disableHighlight}
   ${disableSelection}
 
@@ -206,6 +226,7 @@ const SearchBtn = styled.button`
 const RoundBtn = styled.button`
   all: unset;
   cursor: pointer;
+  will-change: transform;
   ${disableHighlight}
   ${disableSelection}
 
@@ -236,10 +257,25 @@ const RoundBtn = styled.button`
   border-radius: 50%;
   box-shadow: 0 10.5px 21px rgba(0, 0, 0, 0.08);
 `;
-const AddBtn = styled(RoundBtn)``;
+const UploadBtn = styled(RoundBtn)`
+  @media (max-width: 639px) {
+    display: none;
+  }
+`;
+const SearchBtn = styled(RoundBtn)`
+  @media (max-width: 639px) {
+    display: none;
+  }
+`;
+// const MobileSearchBtn = styled(RoundBtn)`
+//   @media (min-width: 640px) {
+//     display: none;
+//   }
+// `;
 const ProfileBtn = styled(Link)`
   all: unset;
   cursor: pointer;
+  will-change: transform;
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
@@ -267,9 +303,17 @@ const ProfileBtn = styled(Link)`
   }
   border-radius: 50%;
   box-shadow: 0 10.5px 21px rgba(0, 0, 0, 0.08);
+
+  @media (max-width: 639px) {
+    display: none;
+  }
 `;
 
-const MenuBtn = styled(RoundBtn)``;
+const MenuBtn = styled(RoundBtn)`
+  @media (max-width: 639px) {
+    display: none;
+  }
+`;
 
 const FocusBtn = styled(RoundBtn)``;
 

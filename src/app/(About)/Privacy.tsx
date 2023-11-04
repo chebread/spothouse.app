@@ -1,15 +1,9 @@
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import MarkdownViewer from 'components/About/MarkdownViewer';
 
 const Privacy = () => {
-  return (
-    <>
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequuntur
-      nisi repudiandae eaque iure numquam? Quam tempora repellendus, vero error
-      corrupti repudiandae, exercitationem explicabo harum cupiditate ipsam
-      totam optio inventore assumenda.
-    </>
-  );
+  const privacy = ``;
+
+  return <MarkdownViewer>{privacy}</MarkdownViewer>;
 };
 
 export default Privacy;
