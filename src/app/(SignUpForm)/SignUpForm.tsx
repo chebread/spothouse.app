@@ -15,15 +15,14 @@ import {
 import { useAtom } from 'jotai';
 import checkBio from 'lib/checkBio';
 import checkUsername from 'lib/checkUsername';
+import checkUsernameDuplicate from 'lib/supabase/checkUsernameDuplicate';
 import signUp from 'lib/supabase/signUp';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 
-// (0): 모달로 처리하자 (전체)
-// (0): 이름 중복 확인하기
-// (0): 프로필 사진 기입 확인하기
+// (0): 여러번 클릭 방지하기 (검토 되기전까지는 막기)
 
 const SignUp = () => {
   const fileAcceptTypes = {
@@ -33,8 +32,8 @@ const SignUp = () => {
   // const [bio, setBio] = useState<string>('');
   // const [username, setUsername] = useState<string>('');
   // const [profileImageFile, setProfileImageFile] = useAtom(profileFileAtom);
-  const [uid, setUid] = useAtom(uidAtom);
-  const [isSignedUp, setIsSignedUp] = useAtom(isSignedUpAtom);
+
+  const [isSignedUp, setIsSignedUp] = useAtom(isSignedUpAtom); // 회원가입 필요
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [currentUserData, setCurrentUserData] = useAtom(currentUserDataAtom);
   const [signUpUserData, setSignUpUserData] = useState<{
@@ -94,32 +93,39 @@ const SignUp = () => {
     });
   };
 
-  console.log(checkBio(signUpUserData.bio));
-
   // 회원가입 최종 진행
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const isProfileImageCorrect = signUpUserData.profileImageFile != null;
     const isUsernameCorrect = checkUsername(signUpUserData.username);
     const isBioCorrect = checkBio(signUpUserData.bio);
 
     if (isProfileImageCorrect && isUsernameCorrect && isBioCorrect) {
-      signUp({
-        profileImage: signUpUserData.profileImageFile,
-        uid: uid,
-        bio: signUpUserData.bio,
-        username: signUpUserData.username,
-      })
-        .then(userData => {
-          setCurrentUserData(userData);
-          setIsSignedUp(false); // 회원가입 종료
-          setIsLoggedIn(true); // 로그인됨
+      console.log(isSignedUp, 'submit');
+      const isUsernameDuplicate = await checkUsernameDuplicate(
+        signUpUserData.username
+      );
+      console.log(isUsernameDuplicate);
+
+      if (!isUsernameDuplicate) {
+        signUp({
+          profileImage: signUpUserData.profileImageFile,
+          uid: currentUserData.uid,
+          bio: signUpUserData.bio,
+          username: signUpUserData.username,
         })
-        .catch(error => {
-          toast.error('회원가입중 오류가 발생하였습니다.');
-        });
+          .then(userData => {
+            setCurrentUserData(userData);
+            setIsSignedUp(false); // 회원가입 종료
+            setIsLoggedIn(true); // 로그인됨
+          })
+          .catch(error => {
+            toast.error('회원가입중 오류가 발생하였습니다.');
+          });
+      } else {
+        toast.error('이미 존재하는 이름입니다');
+      }
     }
   };
-  console.log(checkUsername(signUpUserData.username));
 
   return (
     <BottomSheet
@@ -144,23 +150,7 @@ const SignUp = () => {
       }
     >
       <Container>
-        <h2></h2>
-        <input
-          type="text"
-          value={signUpUserData.username}
-          onChange={onChange}
-          placeholder="이름"
-          id="username"
-        />
-        <h2></h2>
-        <textarea
-          placeholder="소개글"
-          value={signUpUserData.bio}
-          onChange={onChange}
-          id="bio"
-        />
-        <h2></h2>
-
+        <h2>프로필 사진</h2>
         <Dropzone
           onDrop={onDropFile}
           accept={fileAcceptTypes}
@@ -183,6 +173,21 @@ const SignUp = () => {
             );
           }}
         </Dropzone>
+        <h2>이름</h2>
+        <input
+          type="text"
+          value={signUpUserData.username}
+          onChange={onChange}
+          placeholder="이름"
+          id="username"
+        />
+        <h2>소개</h2>
+        <textarea
+          placeholder="소개글"
+          value={signUpUserData.bio}
+          onChange={onChange}
+          id="bio"
+        />
       </Container>
     </BottomSheet>
   );

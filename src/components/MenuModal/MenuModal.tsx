@@ -1,8 +1,9 @@
-import { isMenuClickedAtom } from 'atom/mapAtom';
+import { isMenuClickedAtom } from 'atom/feedAtom';
 import useResize from 'hooks/useResize';
 import { useAtom } from 'jotai';
 import DesktopMenuModal from './DesktopMenuModal';
 import MobileMenuModal from './MobileMenuModal';
+import { useSearchParams } from 'next/navigation';
 
 const MenuModal = () => {
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);

@@ -15,13 +15,11 @@ import {
   isFocusedAtom,
   isMenuClickedAtom,
   isMovedAtom,
-  isPostSearchClickedAtom,
-  isSearchClickedAtom,
   isUploadClickedAtom,
   zoomLevelAtom,
-} from 'atom/mapAtom';
+} from 'atom/feedAtom';
 import MenuModal from 'components/MenuModal';
-import UploadSpotModal from 'components/UploadSpotModal';
+import UploadModal from 'components/UploadModal';
 import FeedHeader from 'components/FeedHeader';
 import FeedMap from 'components/FeedMap';
 import SearchModal from 'app/(Search)';
@@ -52,7 +50,6 @@ const Feed = () => {
   const [watcher, setWatcher] = useState<any>();
   const [isDataLoaded, setIsDataLoaded] = useAtom(isDataLoadedAtom); // 데이터 로딩 되었는가? => isMoved시 false됨
   const [isMoved, setIsMoved] = useAtom(isMovedAtom); // 사용자가 지도를 움직일 시 => 다시 데이터 로딩 필요!
-  // const [isSearchClicked, setIsSearchClicked] = useAtom(isSearchClickedAtom); // Search 버튼 클릭시
   const [isUploadClicked, setIsUploadClicked] = useAtom(isUploadClickedAtom); // 위치 추가 토글
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
   const [currentUserData] = useAtom(currentUserDataAtom);
@@ -140,16 +137,12 @@ const Feed = () => {
             <FeedTabBar />
             {/* 모달 */}
             <MenuModal />
-            <UploadSpotModal
+            <UploadModal
               open={isUploadClicked}
               lat={addedPos.lat}
               lng={addedPos.lng}
               onDismiss={() => setIsUploadClicked(!isUploadClicked)}
             />
-            {/* <SearchModal
-              open={isSearchClicked}
-              onDismiss={() => setIsSearchClicked(!isSearchClicked)}
-            /> */}
           </>
         ) : (
           <Loading />

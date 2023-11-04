@@ -2,7 +2,6 @@ import loadUserData from 'lib/supabase/loadUserDataByUid';
 import {
   isLoggedInAtom,
   isSignedUpAtom,
-  uidAtom,
   currentUserDataAtom,
 } from 'atom/authAtom';
 import { useAtom } from 'jotai';
@@ -26,7 +25,6 @@ const RegisterForm = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [userEmail, setUserEmail] = useState<string>('');
   const [userPw, setUserPw] = useState<string>(''); // 보안 처리하기
-  const [uid, setUid] = useAtom(uidAtom);
   const [currentUserData, setCurrentUserData] = useAtom(currentUserDataAtom);
 
   const onChange = (e: any) => {
@@ -56,7 +54,12 @@ const RegisterForm = () => {
         })
         .catch(error => {
           const uid = data.user.id;
-          setUid(uid);
+          setCurrentUserData(prev => {
+            return {
+              ...prev,
+              uid: uid,
+            };
+          });
           setIsSignedUp(true);
         });
     }
@@ -71,7 +74,12 @@ const RegisterForm = () => {
       if (data.user != null) {
         // 회원가입 성공
         const uid = data.user.id;
-        setUid(uid);
+        setCurrentUserData(prev => {
+          return {
+            ...prev,
+            uid: uid,
+          };
+        });
         console.log('회원가입 성공');
         setIsSignedUp(true);
       }

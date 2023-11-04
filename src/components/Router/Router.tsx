@@ -3,6 +3,7 @@ import Profile from 'app/(Profile)';
 import { useSearchParams } from 'next/navigation';
 import Settings from 'app/(Settings)';
 import About from 'app/(About)';
+import Search from 'app/(Search)';
 
 const Router = () => {
   const searchParams = useSearchParams();
@@ -17,7 +18,8 @@ const Router = () => {
     switch (paramRoutes) {
       case 'u':
         return paramUsername != '' ? <Profile /> : '';
-
+      // case 'search':
+      //   return <Search />;
       case 's':
         return <Settings />;
       case 'a':

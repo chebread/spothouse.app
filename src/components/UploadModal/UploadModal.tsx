@@ -14,8 +14,9 @@ import styled from 'styled-components';
 // spoting = upload spot
 
 // (0): 전체 공개 혹은 비공개 선택 가능 (비공개는 자신의 프로필에서만 확인가능)
+// 다른 위치는 카카오 api 사용. 그리고 다른 위치 추가시 거기로 snapTo하기
 
-const UploadSpotModal = ({ open, lat, lng, onDismiss }) => {
+const UploadModal = ({ open, lat, lng, onDismiss }) => {
   const [spotData, setSpotData] = useState<{
     title: string;
     caption: string;
@@ -94,7 +95,26 @@ const UploadSpotModal = ({ open, lat, lng, onDismiss }) => {
       header="새 장소"
       footer={<FooterBtn onClick={onUploadSpot}>게시</FooterBtn>}
     >
+      <h2>장소 선택</h2>
+      <RadioGroup
+        value={spotData.mode}
+        onChange={value => {
+          setSpotData(prev => {
+            return {
+              ...prev,
+              mode: value,
+            };
+          });
+        }}
+      >
+        <Radio value="public" defaultChecked>
+          현재 위치
+        </Radio>
+        <Radio value="private">다른 위치</Radio>
+      </RadioGroup>
+
       <h2>공개 범위</h2>
+      {/* 토글로 바꾸기 */}
       <RadioGroup
         value={spotData.mode}
         onChange={value => {
@@ -146,4 +166,4 @@ const UploadSpotModal = ({ open, lat, lng, onDismiss }) => {
   );
 };
 
-export default UploadSpotModal;
+export default UploadModal;

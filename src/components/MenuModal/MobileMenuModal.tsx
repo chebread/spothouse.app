@@ -1,4 +1,4 @@
-import { isMenuClickedAtom } from 'atom/mapAtom';
+import { isMenuClickedAtom } from 'atom/feedAtom';
 import BottomSheet from 'components/BottomSheet';
 import { useAtom } from 'jotai';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ const Menu = styled.button`
   padding: 1rem;
 
   &:active {
-    background-color: #efefef;
+    /* background-color: #efefef; */
   }
   span {
     font-size: 1rem;

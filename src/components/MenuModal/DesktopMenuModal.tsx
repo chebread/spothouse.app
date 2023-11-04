@@ -1,4 +1,4 @@
-import { isMenuClickedAtom } from 'atom/mapAtom';
+import { isMenuClickedAtom } from 'atom/feedAtom';
 import { useAtom } from 'jotai';
 import Link from 'next/link';
 import styled from 'styled-components';

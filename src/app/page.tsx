@@ -3,7 +3,6 @@
 import {
   isLoggedInAtom,
   isSignedUpAtom,
-  uidAtom,
   currentUserDataAtom,
 } from 'atom/authAtom';
 import Feed from 'app/(Feed)';
@@ -14,16 +13,16 @@ import supabase from 'lib/supabase';
 import { useEffect, useState } from 'react';
 import loadUserData from '../lib/supabase/loadUserDataByUid';
 import Loading from 'app/(Loading)';
-import { isApproximatePosLoadedAtom } from 'atom/mapAtom';
+import { isApproximatePosLoadedAtom } from 'atom/feedAtom';
 import Router from 'components/Router';
 
 // 내부적은 uid 사용, 외부 사용자 개입되는 것은 username 사용
+// (0): uidAtom 삭제함 (currentUserData.uid로 통함 처리함) => 에러 없는지 크로스 체킹 필요
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [isSignedUp, setIsSignedUp] = useAtom(isSignedUpAtom);
   const [currentUserData, setCurrentUserData] = useAtom(currentUserDataAtom);
-  const [uid, setUid] = useAtom(uidAtom);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isApproximatePosLoaded] = useAtom(isApproximatePosLoadedAtom);
 
@@ -41,7 +40,12 @@ const Home = () => {
           })
           .catch(error => {
             // 유저의 정보가 완전하지 않으면 다시 회원가입 받음
-            setUid(user.id);
+            setCurrentUserData(prev => {
+              return {
+                ...prev,
+                uid: user.id,
+              };
+            });
             setIsSignedUp(true);
             setIsLoaded(true);
           });

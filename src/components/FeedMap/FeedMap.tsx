@@ -11,7 +11,7 @@ import {
   isMovedAtom,
   isUploadClickedAtom,
   zoomLevelAtom,
-} from 'atom/mapAtom';
+} from 'atom/feedAtom';
 import { useAtom } from 'jotai';
 import styled from 'styled-components';
 

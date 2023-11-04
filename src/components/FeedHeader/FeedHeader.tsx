@@ -8,9 +8,8 @@ import {
   isMenuClickedAtom,
   isMovedAtom,
   isPostSearchClickedAtom,
-  isSearchClickedAtom,
   isUploadClickedAtom,
-} from 'atom/mapAtom';
+} from 'atom/feedAtom';
 import { useAtom } from 'jotai';
 import { useSearchParams } from 'next/navigation';
 // svgs
@@ -19,20 +18,25 @@ import FilledNavigationIcon from 'assets/FilledNavigationIcon.svg';
 import MenuIcon from 'assets/MenuIcon.svg';
 import AddIcon from 'assets/AddIcon.svg';
 import SearchIcon from 'assets/SearchIcon.svg';
-import { useState } from 'react';
+import BackIcon from 'assets/BackIcon.svg';
 import styled from 'styled-components';
 import disableHighlight from 'styles/disableHighlight';
 import disableSelection from 'styles/disableSelection';
 import Link from 'next/link';
+import { useRef } from 'react';
 
 const FeedHeader = () => {
   const searchParams = useSearchParams();
+  const paramRoutes = searchParams
+    .toString()
+    .substring(0, searchParams.toString().indexOf('='));
+  const isNeededBack = paramRoutes === 'u' || paramRoutes === 'p'; // 유저가 없으면 이거 작동시키면 안됨. => 아니다 그냥 프로필 에서 404 때려버리자.
+
   const paramUsername = searchParams.get('u');
   const [currentUserData] = useAtom(currentUserDataAtom);
   const [isMoved, setIsMoved] = useAtom(isMovedAtom); // 사용자가 지도를 움직일 시 => 다시 데이터 로딩 필요!
   const [isFocused, setIsFocused] = useAtom(isFocusedAtom); // 사용자 위치 추적
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
-  // const [isSearchClicked, setIsSearchClicked] = useAtom(isSearchClickedAtom);
   const [isPostSearchClicked, setIsPostSearchClicked] = useAtom(
     isPostSearchClickedAtom
   );
@@ -46,7 +50,8 @@ const FeedHeader = () => {
   const [centerPos, setCenterPos] = useAtom(centerPosAtom); // Map center 위치 정보
 
   // 메뉴 클릭시
-  const onMenu = () => {
+  const onMenu = (e: any) => {
+    e.stopPropagation();
     setIsMenuClicked(!isMenuClicked);
   };
   // 게시물 검색 클릭시
@@ -84,23 +89,23 @@ const FeedHeader = () => {
       });
     }
   };
-  // 찾기 기능
-  // const onSearch = () => {
-  //   setIsSearchClicked(!isSearchClicked);
-  // };
 
   return (
-    <Container>
+    <Container onClick={() => setIsMenuClicked(false)}>
       <BtnWrapper>
         <LeftBtnWrapper>
-          <MenuBtn
-            onClick={(e: any) => {
-              onMenu();
-            }}
+          <BackBtn
+            as={Link}
+            href="/"
+            $visible={isNeededBack} // (0): 개선할꺼면 개선하기
           >
+            <BackIcon />
+          </BackBtn>
+          <MenuBtn $visible={!isNeededBack} onClick={onMenu}>
             <MenuIcon />
           </MenuBtn>
           <ProfileBtn
+            $visible={!isNeededBack}
             href={
               paramUsername === currentUserData.username
                 ? '/'
@@ -127,12 +132,12 @@ const FeedHeader = () => {
           )}
         </CenterBtnWrapper>
         <RightBtnWrapper>
-          <UploadBtn onClick={onUpload}>
+          <UploadBtn $visible={!isNeededBack} onClick={onUpload}>
             <AddIcon />
           </UploadBtn>
-          <SearchBtn as={Link} href="/?sh">
+          {/* <SearchBtn $visible={!isNeededBack} as={Link} href="/?search">
             <SearchIcon />
-          </SearchBtn>
+          </SearchBtn> */}
           <FocusBtn
             onClick={(e: any) => {
               onFocus();
@@ -257,12 +262,77 @@ const RoundBtn = styled.button`
   border-radius: 50%;
   box-shadow: 0 10.5px 21px rgba(0, 0, 0, 0.08);
 `;
-const UploadBtn = styled(RoundBtn)`
+const BackBtn = styled(RoundBtn)<{
+  $visible: boolean;
+}>`
+  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
+
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-name: smooth;
+
+  @keyframes smooth {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* @media (min-width: 640px) {
+    display: none;
+  } */
+`;
+const UploadBtn = styled(RoundBtn)<{
+  $visible: boolean;
+}>`
+  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
+
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-name: smooth;
+
+  @keyframes smooth {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   @media (max-width: 639px) {
     display: none;
   }
 `;
-const SearchBtn = styled(RoundBtn)`
+const SearchBtn = styled(RoundBtn)<{
+  $visible: boolean;
+}>`
+  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
+
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-name: smooth;
+
+  @keyframes smooth {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   @media (max-width: 639px) {
     display: none;
   }
@@ -272,12 +342,32 @@ const SearchBtn = styled(RoundBtn)`
 //     display: none;
 //   }
 // `;
-const ProfileBtn = styled(Link)`
+const ProfileBtn = styled(Link)<{
+  $visible: boolean;
+}>`
   all: unset;
   cursor: pointer;
   will-change: transform;
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
+
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-name: smooth;
+
+  @keyframes smooth {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 
   transition-property: transform;
   transition-duration: 0.2s;
@@ -294,7 +384,6 @@ const ProfileBtn = styled(Link)`
 
   height: 3.5rem;
   width: 3.5rem;
-  display: flex;
   justify-content: center;
   align-items: center;
   svg {
@@ -309,12 +398,48 @@ const ProfileBtn = styled(Link)`
   }
 `;
 
-const MenuBtn = styled(RoundBtn)`
+const MenuBtn = styled(RoundBtn)<{
+  $visible: boolean;
+}>`
+  display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
+
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-name: smooth;
+
+  @keyframes smooth {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   @media (max-width: 639px) {
     display: none;
   }
 `;
 
-const FocusBtn = styled(RoundBtn)``;
+const FocusBtn = styled(RoundBtn)`
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-name: smooth;
+
+  @keyframes smooth {
+    from {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+`;
 
 export default FeedHeader;

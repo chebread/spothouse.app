@@ -11,6 +11,11 @@ const MarkdownViewer = ({ children }) => {
 
 const Container = styled.div`
   padding: 1rem;
+  &.markdown-body {
+    // 임시 코드 //
+    background-color: #fff;
+    color: #000;
+  }
 `;
 
 export default MarkdownViewer;

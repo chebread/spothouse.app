@@ -7,50 +7,43 @@ import { BottomSheet } from 'react-spring-bottom-sheet';
 import { BottomSheet as BottomSheetProvider } from 'react-spring-bottom-sheet';
 import useResize from 'hooks/useResize';
 import Link from 'next/link';
-import {
-  isMenuClickedAtom,
-  isSearchClickedAtom,
-  isUploadClickedAtom,
-} from 'atom/mapAtom';
+import { isMenuClickedAtom, isUploadClickedAtom } from 'atom/feedAtom';
 import { useAtom } from 'jotai';
+import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { currentUserDataAtom } from 'atom/authAtom';
 
 // 640px 미만 부터 켜짐
-
-// 게시물 업로드
-// 검색
-// 프로필
-// 알림
-// 메뉴
+// (0): 이거를 할지, 헤더를 할지는 선택하자
 
 const FeedTabBar = () => {
+  const searchParams = useSearchParams();
+  const paramUsername = searchParams.get('u');
   const { width } = useResize();
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
-  const [isSearchClicked, setIsSearchClicked] = useAtom(isSearchClickedAtom);
   const [isUploadClicked, setIsUploadClicked] = useAtom(isUploadClickedAtom);
+  const [currentUserData] = useAtom(currentUserDataAtom);
 
   const onMenu = () => {
     setIsMenuClicked(!isMenuClicked);
-  };
-  const onSearch = () => {
-    setIsSearchClicked(!isSearchClicked);
   };
   const onUploadSpot = () => {
     setIsUploadClicked(true);
   };
 
   return (
-    <Container open={width < 640} blocking={false}>
+    <Container open={true} blocking={false} $visible={width < 640}>
       <Wrapper>
         <>
           <Nav onClick={onMenu}>
             <MenuIcon />
           </Nav>
         </>
-        <>
-          <Nav onClick={onSearch}>
+        {/* <>
+          <Nav as={Link} href="/?search">
             <SearchIcon />
           </Nav>
-        </>
+        </> */}
         <>
           <Nav onClick={onUploadSpot}>
             <AddIcon />
@@ -62,10 +55,17 @@ const FeedTabBar = () => {
           </Nav>
         </>
         <>
-          <Nav as={Link} href="/?u=unseulson">
+          <Nav
+            as={Link}
+            href={
+              paramUsername === currentUserData.username
+                ? '/'
+                : `?u=${currentUserData.username}`
+            }
+          >
             <Profile
               style={{
-                backgroundImage: `url(https://newjeans.kr/imgs/getup/photos/NJ_GetUp_23.jpg)`,
+                backgroundImage: `url(${currentUserData.profileFileUrl})`,
               }}
             ></Profile>
           </Nav>
@@ -75,7 +75,9 @@ const FeedTabBar = () => {
   );
 };
 
-const Container = styled(BottomSheetProvider)`
+const Container = styled(BottomSheetProvider)<{ $visible }>`
+  display: ${({ $visible }) =>
+    $visible ? 'block' : 'none'}; // 모달 겹침 현상으로 인해 이런 식으로 처리함
   // 모달
   [data-rsbs-overlay] {
     z-index: 1;

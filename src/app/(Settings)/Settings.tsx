@@ -17,7 +17,6 @@ const Settings = () => {
       });
       setIsLoggedIn(false);
       router.push('/');
-      alert('삭제됨');
     },
     () => {}
   );
