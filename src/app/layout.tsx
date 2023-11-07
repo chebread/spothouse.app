@@ -4,6 +4,8 @@ import { Toaster } from 'react-hot-toast';
 import GlobalStyles from 'styles/GlobalStyles';
 import 'react-spring-bottom-sheet/dist/style.css'; // for react-spring-bottom-sheet
 import 'github-markdown-css';
+import FeedMap from 'components/FeedMap';
+import Layout from 'styles/Layout';
 
 export default function RootLayout({
   children,
@@ -15,7 +17,11 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <StyledComponentsRegistry>
           <GlobalStyles />
-          {children}
+          <Layout>
+            {/* 지도는 한 번만 로드하되, 지도를 표시하는 데이터들만 바꾸기 */}
+            {/* <FeedMap /> */}
+            {children}
+          </Layout>
           {/* Portal */}
           <div id="toast">
             <Toaster
@@ -45,7 +51,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://spothouse.app'),
   title: {
-    template: '%s',
+    template: '%s - Spothouse',
     default: 'Spothouse',
   },
   description: `위치를 찍다, Spothouse`,

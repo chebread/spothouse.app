@@ -17,13 +17,14 @@ import NavigationIcon from 'assets/NavigationIcon.svg';
 import FilledNavigationIcon from 'assets/FilledNavigationIcon.svg';
 import MenuIcon from 'assets/MenuIcon.svg';
 import AddIcon from 'assets/AddIcon.svg';
-import SearchIcon from 'assets/SearchIcon.svg';
+import NotificationsIcon from 'assets/NotificationsIcon.svg';
 import BackIcon from 'assets/BackIcon.svg';
 import styled from 'styled-components';
 import disableHighlight from 'styles/disableHighlight';
 import disableSelection from 'styles/disableSelection';
 import Link from 'next/link';
-import { useRef } from 'react';
+
+// (0): isNeededBack으로 관리하는 것이 아니라 headerVisible로 관리하자 (ture / false로 하도록 한다.)
 
 const FeedHeader = () => {
   const searchParams = useSearchParams();
@@ -135,9 +136,9 @@ const FeedHeader = () => {
           <UploadBtn $visible={!isNeededBack} onClick={onUpload}>
             <AddIcon />
           </UploadBtn>
-          {/* <SearchBtn $visible={!isNeededBack} as={Link} href="/?search">
-            <SearchIcon />
-          </SearchBtn> */}
+          <NotificationsBtn $visible={!isNeededBack} as={Link} href="/?n">
+            <NotificationsIcon />
+          </NotificationsBtn>
           <FocusBtn
             onClick={(e: any) => {
               onFocus();
@@ -307,12 +308,8 @@ const UploadBtn = styled(RoundBtn)<{
       transform: scale(1);
     }
   }
-
-  @media (max-width: 639px) {
-    display: none;
-  }
 `;
-const SearchBtn = styled(RoundBtn)<{
+const NotificationsBtn = styled(RoundBtn)<{
   $visible: boolean;
 }>`
   display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
@@ -331,10 +328,6 @@ const SearchBtn = styled(RoundBtn)<{
       opacity: 1;
       transform: scale(1);
     }
-  }
-
-  @media (max-width: 639px) {
-    display: none;
   }
 `;
 // const MobileSearchBtn = styled(RoundBtn)`
@@ -392,10 +385,6 @@ const ProfileBtn = styled(Link)<{
   }
   border-radius: 50%;
   box-shadow: 0 10.5px 21px rgba(0, 0, 0, 0.08);
-
-  @media (max-width: 639px) {
-    display: none;
-  }
 `;
 
 const MenuBtn = styled(RoundBtn)<{
@@ -417,10 +406,6 @@ const MenuBtn = styled(RoundBtn)<{
       opacity: 1;
       transform: scale(1);
     }
-  }
-
-  @media (max-width: 639px) {
-    display: none;
   }
 `;
 

@@ -1,3 +1,5 @@
+'use client';
+
 import loadUserDataByUsername from 'lib/supabase/loadUserDataByUsername';
 import { notFound, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -14,6 +16,7 @@ import { useLongPress } from 'use-long-press';
 import EditProfileModal from 'components/EditProfileModal';
 import { profileUserDataAtom } from 'atom/profileAtom';
 import checkUsername from 'lib/checkUsername';
+import FeedMap from 'components/FeedMap';
 
 // (0): 아래로 내릴 수 있는 기능 추가하기
 // (0): 프로필이 자신인지 확인하는 기능 추가하기 => 더보기 클릭시 모달이 뜨고, 거기서 팔로워, 팔로잉 볼 수 있고 관리 가능함
@@ -25,11 +28,11 @@ import checkUsername from 'lib/checkUsername';
 
 // 타인의 프로필 수정시 실시간으로 바뀌진 않음. 자기 자신의 프로필 변경시만 실시간으로 변경됨.
 
-const Profile = ({ open }) => {
+const Profile = ({ username }) => {
+  console.log(username);
+
   // 유의: open은 라우터일때만 예기함
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const paramUsername = searchParams.get('u');
   const [currentUserData] = useAtom(currentUserDataAtom);
   const [userData, setUserData] = useAtom(profileUserDataAtom);
   const [isUserExisted, setIsUserExisted] = useState(false);
@@ -55,7 +58,7 @@ const Profile = ({ open }) => {
 
   useEffect(() => {
     const onLoad = async () => {
-      loadUserDataByUsername(paramUsername)
+      loadUserDataByUsername(username)
         .then(userData => {
           // 사용자가 실존함
           setIsUserExisted(true);
@@ -73,12 +76,12 @@ const Profile = ({ open }) => {
         });
     };
 
-    if (open && checkUsername(paramUsername)) {
+    if (checkUsername(username)) {
       onLoad();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramUsername]);
+  }, [username]);
 
   const onFollow = (e: any) => {
     setIsFollowing(!isFollowing);
@@ -96,7 +99,7 @@ const Profile = ({ open }) => {
   return (
     <>
       <BottomSheet
-        open={open && isUserExisted}
+        open={true && isUserExisted}
         blocking={false}
         onDismiss={onClose}
         onClick={onClose}

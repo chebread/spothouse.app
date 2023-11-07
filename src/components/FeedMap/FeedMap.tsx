@@ -1,3 +1,5 @@
+'use client';
+
 import { CustomOverlayMap, Map as MapProvider } from 'react-kakao-maps-sdk';
 import useMap from 'lib/map/useMap';
 import {
@@ -14,9 +16,11 @@ import {
 } from 'atom/feedAtom';
 import { useAtom } from 'jotai';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 
 const FeedMap = () => {
   useMap(); // Map 사용
+
   const [centerPos, setCenterPos] = useAtom(centerPosAtom);
   const [currentPos, setCurrentPos] = useAtom(currentPosAtom); // 현재 위치 정보
   const [addedPos, setAddedPos] = useAtom(addedPosAtom); // 추가한 위치 정보
@@ -32,6 +36,9 @@ const FeedMap = () => {
     isApproximatePosLoadedAtom
   ); // 대략 위치 로드시
 
+  useEffect(() => {
+    console.log(1);
+  }, []);
   const onZoomChanged = (map: any) => {
     setZoomLevel(map.getLevel());
   };

@@ -17,10 +17,6 @@ const DesktopMenuModal = ({ onDismiss }) => {
           <span>설정</span>
         </Menu>
         <MenuHr />
-        <Menu onClick={onDismiss} href="/?n">
-          <span>알림</span>
-        </Menu>
-        <MenuHr />
         <Menu onClick={onDismiss} href="/?a">
           <span>정보</span>
         </Menu>

@@ -5824,6 +5824,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-hook-geolocation@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "react-hook-geolocation@npm:1.1.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 13216d7ddd2124403bcd11fc3847295a2503ef71d830ad2b8e291f4c140bbabd3f7bb4860a163be165ef623cbb93aca55c7f31afe1940c6703fd25089cdd3ef2
+  languageName: node
+  linkType: hard
+
 "react-hot-toast@npm:^2.4.1":
   version: 2.4.1
   resolution: "react-hot-toast@npm:2.4.1"
@@ -6371,6 +6380,7 @@ __metadata:
     react: ^18
     react-dom: ^18
     react-dropzone: ^14.2.3
+    react-hook-geolocation: ^1.1.0
     react-hot-toast: ^2.4.1
     react-kakao-maps-sdk: ^1.1.21
     react-markdown: ^9.0.0

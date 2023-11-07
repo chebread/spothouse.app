@@ -6,7 +6,7 @@ import Privacy from './Privacy';
 import License from './License';
 import BottomSheetFooter from 'components/BottomSheet/FooterBtn';
 
-const About = () => {
+const About = ({ open }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const paramAbout = searchParams.get('a');
@@ -17,7 +17,7 @@ const About = () => {
 
   return (
     <BottomSheet
-      open={true}
+      open={open}
       onDismiss={onDismiss}
       snapPoints={({ minHeight, maxHeight }) => {
         if (paramAbout === '') {

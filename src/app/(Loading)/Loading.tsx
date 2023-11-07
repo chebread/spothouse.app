@@ -27,12 +27,14 @@ const Loading = () => {
 
 const Container = styled.div`
   ${disableSelection}
+  z-index: 1;
   position: fixed;
   height: 100%;
   width: 100%;
   // disable scroll
   overflow: hidden;
   touch-action: none;
+  background-color: #fff;
 
   /* background-repeat: repeat;
   background-size: auto auto; */

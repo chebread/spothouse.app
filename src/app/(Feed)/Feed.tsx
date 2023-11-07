@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { currentUserDataAtom } from 'atom/authAtom';
@@ -134,7 +132,7 @@ const Feed = () => {
             {/* 헤더 */}
             <FeedHeader />
             {/* 탭바 */}
-            <FeedTabBar />
+            {/* <FeedTabBar /> */}
             {/* 모달 */}
             <MenuModal />
             <UploadModal

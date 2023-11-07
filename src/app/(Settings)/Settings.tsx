@@ -8,7 +8,7 @@ import deleteUser from 'lib/supabase/deleteUser';
 import logoutUser from 'lib/supabase/logoutUser';
 import { useRouter } from 'next/navigation';
 
-const Settings = () => {
+const Settings = ({ open }) => {
   const confirmWithdrawal = useConfirm(
     '정말 탈퇴 하시겠습니까?',
     () => {
@@ -47,9 +47,7 @@ const Settings = () => {
   };
 
   return (
-    <BottomSheet open={true} onDismiss={onDismiss}>
-      <h2>개정 공개 범위</h2>
-      <button>비공개 계정</button>
+    <BottomSheet open={open} onDismiss={onDismiss}>
       <h2>계정</h2>
       <button onClick={confirmLogout}>로그아웃하기</button>
       <button onClick={confirmWithdrawal}>서비스 탈퇴하기</button>

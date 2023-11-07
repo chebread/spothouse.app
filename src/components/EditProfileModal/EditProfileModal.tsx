@@ -105,7 +105,7 @@ const EditProfileModal = ({ open, onDismiss }) => {
         const newUserData = userData;
         // username 변경시 라우팅하기
         if (newUserData.username != currentUserData.username) {
-          router.push(`?u=${newUserData.username}`);
+          router.replace(`?u=${newUserData.username}`);
         }
         if (
           newUserData.username != currentUserData.username ||
@@ -149,6 +149,8 @@ const EditProfileModal = ({ open, onDismiss }) => {
       footer={<FooterBtn onClick={onSubmit}>완료</FooterBtn>}
     >
       <h2>프로필 사진</h2>
+      <button>비공개</button>
+      {/* on / off 토글로 바꾸기 */}
       <Dropzone
         onDrop={onDropFile}
         accept={fileAcceptTypes}
@@ -180,6 +182,7 @@ const EditProfileModal = ({ open, onDismiss }) => {
         id="username"
       />
       <h2>소개</h2>
+      <button>비공개</button>
       <textarea
         placeholder="소개글"
         value={editUserData.bio}
