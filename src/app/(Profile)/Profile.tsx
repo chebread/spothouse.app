@@ -14,14 +14,12 @@ import { useLongPress } from 'use-long-press';
 import EditProfileModal from 'components/EditProfileModal';
 import { profileUserDataAtom } from 'atom/profileAtom';
 import checkUsername from 'lib/checkUsername';
+import { isHeaderVisibleAtom } from 'atom/feedAtom';
 
-// (0): 아래로 내릴 수 있는 기능 추가하기
 // (0): 프로필이 자신인지 확인하는 기능 추가하기 => 더보기 클릭시 모달이 뜨고, 거기서 팔로워, 팔로잉 볼 수 있고 관리 가능함
-// (0): username, profile img, desc 길게 누르는 것 인식되면 (라이브러리 쓰기) username을 길게 눌렀으면 username만 변경할 수 있는 모달을 제공함, 다른 것들도 별개로 모달을 제공함!
-// (0): 프로필 사진 누르면 큰 화면으로 프로필 사진이 뜸 (모달로서), 길게 누르면 위와 같은 기능이 작동함 (수정기능)
-// (0): X 버튼 추가하기 (오직 데스크탑만)
-// (0): Threads 처럼 구성하기 (아래에서 위로 나오는 것 처럼)
-// (0): 프로필 404 페이지 추가하기
+// (0): /@로 분립하기. 근데 kakao map이 refresing이 없어야 함 (layout에 위치하던가 아님 nextjs에서 변하지 않는 그 react router 처럼 리프레쉬 안되게 하는 컴포넌트 찾아서 위치하기 장기적으로 이게 맞음)
+// (0): Feed - post 확인 / Profile - user's post 확인 (분립하기)
+// (0): client component에서 SEO 할 수 있는 방법 or Querystring router 또는 Hash routing에서 SEO 사용할 수 있는 방법 찾아내기!
 
 // 타인의 프로필 수정시 실시간으로 바뀌진 않음. 자기 자신의 프로필 변경시만 실시간으로 변경됨.
 
@@ -29,15 +27,16 @@ const Profile = ({ open }) => {
   // 유의: open은 라우터일때만 예기함
   const router = useRouter();
   const searchParams = useSearchParams();
-  const paramUsername = searchParams.get('u');
+  const paramUsername = searchParams.get('user');
   const [currentUserData] = useAtom(currentUserDataAtom);
   const [userData, setUserData] = useAtom(profileUserDataAtom);
-  const [isUserExisted, setIsUserExisted] = useState(false);
+  const [isUserExisted, setIsUserExisted] = useState(undefined);
   const [isPersonalProfile, setIsPersonalProfile] = useState(false); // 개인 프로필인가?
   const [isFollowing, setIsFollowing] = useState(false); // 내가 팔로잉 하는 사람인지
   const [isSeeMoreClicked, setIsSeeMoreClicked] = useState(false);
   const [isProfileImageClicked, setIsProfileImageClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
+  const [isHeaderVisble, setIsHeaderVisible] = useAtom(isHeaderVisibleAtom);
 
   const bind = useLongPress(
     () => {
@@ -75,6 +74,9 @@ const Profile = ({ open }) => {
 
     if (open && checkUsername(paramUsername)) {
       onLoad();
+      setIsHeaderVisible(false);
+    } else {
+      setIsHeaderVisible(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,7 +127,7 @@ const Profile = ({ open }) => {
               </InfoWrapper>
             </LeftWrapper>
             <RightWrapper>
-              {isPersonalProfile ? (
+              {/* {isPersonalProfile ? (
                 ''
               ) : (
                 <>
@@ -133,7 +135,7 @@ const Profile = ({ open }) => {
                     {isFollowing ? '팔로잉' : '팔로우'}
                   </FollowBtn>
                 </>
-              )}
+              )} */}
               <MoreSeeBtn onClick={onMoreSee}>더보기</MoreSeeBtn>
             </RightWrapper>
           </Container>
@@ -154,6 +156,14 @@ const Profile = ({ open }) => {
         src={userData.profileFileUrl}
         onDismiss={onProfileImageClick}
       />
+      <BottomSheet
+        open={open && !isUserExisted}
+        blocking={false}
+        onDismiss={onClose}
+        onClick={onClose}
+      >
+        404
+      </BottomSheet>
     </>
   );
 };
@@ -173,6 +183,7 @@ const BottomSheet = styled(BottomSheetProvider)`
   }
   // 헤더
   [data-rsbs-header] {
+    /* display: none; */
   }
 `;
 const Wrapper = styled.div`
@@ -181,11 +192,19 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
+  /* transition-property: padding;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out; */
+
   max-width: 640px;
   margin: 0 auto;
   height: 100%;
   box-sizing: border-box;
   padding: 1rem; // padding: 1rem / padding: 0 1rem 1rem 1rem
+  /* @media (min-width: 640px) {
+    // 640px 부터 데스크탑 처리함
+    padding: 1.25rem; // padding: 1rem / padding: 0 1rem 1rem 1rem
+  } */
   display: flex;
   flex-direction: row;
   justify-content: space-between;

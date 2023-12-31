@@ -13,7 +13,7 @@ const MenuModal = () => {
     setIsMenuClicked(!isMenuClicked);
   };
 
-  return width > 640 ? (
+  return width > 639.9 ? (
     <DesktopMenuModal onDismiss={onDismiss} />
   ) : (
     <MobileMenuModal onDismiss={onDismiss} />

@@ -16,7 +16,7 @@ import {
 } from 'atom/feedAtom';
 import { useAtom } from 'jotai';
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import CurrentPosMarker from 'components/Markers/CurrentPosMarker';
 
 const FeedMap = () => {
   useMap(); // Map 사용
@@ -36,9 +36,6 @@ const FeedMap = () => {
     isApproximatePosLoadedAtom
   ); // 대략 위치 로드시
 
-  useEffect(() => {
-    console.log(1);
-  }, []);
   const onZoomChanged = (map: any) => {
     setZoomLevel(map.getLevel());
   };
@@ -87,7 +84,6 @@ const FeedMap = () => {
         onZoomStart={onMove}
         onDragStart={onMove}
         disableDoubleClickZoom={true}
-        // onDoubleClick={onAddSpot}
         onClick={() => {
           setIsMenuClicked(false);
         }}
@@ -95,9 +91,7 @@ const FeedMap = () => {
       >
         {isCurrentPosLoaded ? (
           <>
-            <CustomOverlayMap position={currentPos}>
-              <CurrentPosMarker onClick={onFocus}></CurrentPosMarker>
-            </CustomOverlayMap>
+            <CurrentPosMarker onClick={onFocus} position={currentPos} />
           </>
         ) : (
           ''
@@ -107,15 +101,6 @@ const FeedMap = () => {
   );
 };
 
-const CurrentPosMarker = styled.div`
-  height: 1rem;
-  width: 1rem;
-  background-color: rgb(66, 132, 243);
-  opacity: 0.9;
-  border-radius: 50%;
-  border: white solid 3px;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.08);
-`;
 const MapViewer = styled(MapProvider)`
   position: absolute;
   height: 100%;

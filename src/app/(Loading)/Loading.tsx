@@ -42,7 +42,7 @@ const Container = styled.div`
 const Info = styled.div`
   svg {
     height: 0.6rem;
-    @media (min-width: 639.9px) {
+    @media (min-width: 640px) {
       height: 0.75rem;
     }
     /* path {
@@ -70,7 +70,7 @@ const LogoWrapper = styled.div`
 const Logo = styled.div`
   svg {
     height: 1.5rem;
-    @media (min-width: 639.9px) {
+    @media (min-width: 640px) {
       height: 2rem;
     }
   }

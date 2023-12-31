@@ -7,9 +7,11 @@ import CancelIcon from 'assets/CancelIcon.svg';
 const ProfileImageViewer = ({ visible, onDismiss, src }) => {
   return (
     <Container $visible={visible} onClick={onDismiss}>
-      <CancelBtn>
-        <CancelIcon />
-      </CancelBtn>
+      <CancelBtnWrapper>
+        <CancelBtn>
+          <CancelIcon />
+        </CancelBtn>
+      </CancelBtnWrapper>
 
       <ProfileImage
         style={{
@@ -22,26 +24,18 @@ const ProfileImageViewer = ({ visible, onDismiss, src }) => {
     </Container>
   );
 };
-const CancelBtnWrapper = styled.div``;
-const CancelBtn = styled.button`
-  all: unset;
-  cursor: pointer;
-  will-change: transform;
-
+const CancelBtnWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  margin: 2rem;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 1rem;
-  border-radius: 50%;
-  background-color: transparent; // rgb(239, 239, 239)
+  margin: 1rem 0 0 1.5rem;
+`;
+const CancelBtn = styled.button`
+  all: unset;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  will-change: transform;
 
   transition-property: transform;
   transition-duration: 0.2s;
@@ -50,9 +44,18 @@ const CancelBtn = styled.button`
   &:active {
     transform: scale(0.86);
   }
+
+  background-color: transparent;
+  height: 3.5rem;
+  width: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   svg {
     height: 1rem;
+    width: 1rem;
   }
+  border-radius: 50%;
 `;
 const ProfileImage = styled.div`
   all: unset;

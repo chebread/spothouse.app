@@ -6,15 +6,15 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  async redirects() {
-    return [
-      {
-        source: '/@:path', // 공유할땐 /@haneum으로 할 수 있도록 세팅함
-        destination: '/?u=:path',
-        permanent: true,
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/@:path', // 공유할땐 /@haneum으로 할 수 있도록 세팅함
+  //       destination: '/?user=:path',
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

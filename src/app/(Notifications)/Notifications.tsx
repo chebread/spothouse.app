@@ -6,6 +6,8 @@ import BottomSheet from 'components/BottomSheet';
 // 팔로잉하는 사람의 게시물이 추가되면 여기에 뜸
 // 특정 알림 옆으로 밀면 없에기 가능
 
+// (0): 일단 기능 추가 안함. 검색으로 바꾸겠음
+
 const Notifications = ({ open }) => {
   const router = useRouter();
 

@@ -17,11 +17,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <StyledComponentsRegistry>
           <GlobalStyles />
-          <Layout>
-            {/* 지도는 한 번만 로드하되, 지도를 표시하는 데이터들만 바꾸기 */}
-            {/* <FeedMap /> */}
-            {children}
-          </Layout>
+          <Layout>{children}</Layout>
           {/* Portal */}
           <div id="toast">
             <Toaster
@@ -51,7 +47,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://spothouse.app'),
   title: {
-    template: '%s - Spothouse',
+    template: '%s • Spothouse',
     default: 'Spothouse',
   },
   description: `위치를 찍다, Spothouse`,
@@ -77,4 +73,18 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
+  // icons: [
+  //   {
+  //     rel: 'icon',
+  //     type: 'image/svg+xml',
+  //     url: 'favicons/light-favicon.svg',
+  //     media: '(prefers-color-scheme: light)',
+  //   },
+  //   {
+  //     rel: 'icon',
+  //     type: 'image/svg+xml',
+  //     url: 'favicons/light-favicon.svg',
+  //     media: '(prefers-color-scheme: dark)',
+  //   },
+  // ],
 };

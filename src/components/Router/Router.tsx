@@ -31,10 +31,10 @@ const Router = () => {
 
   return (
     <>
-      <Profile open={paramRoutes === 'u' && paramUsername != ''} />
-      <Settings open={paramRoutes === 's'} />
-      <About open={paramRoutes === 'a'} />
-      <Notifications open={paramRoutes === 'n'} />
+      <Profile open={paramRoutes === 'user' && paramUsername != ''} />
+      <Settings open={paramRoutes === 'settings'} />
+      <About open={paramRoutes === 'about'} />
+      {/* <Notifications open={paramRoutes === 'notifications'} /> */}
       <Search open={paramRoutes === 'search'} />
 
       {(() => {

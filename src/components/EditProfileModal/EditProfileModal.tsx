@@ -105,7 +105,7 @@ const EditProfileModal = ({ open, onDismiss }) => {
         const newUserData = userData;
         // username 변경시 라우팅하기
         if (newUserData.username != currentUserData.username) {
-          router.replace(`?u=${newUserData.username}`);
+          router.replace(`user=${newUserData.username}`);
         }
         if (
           newUserData.username != currentUserData.username ||

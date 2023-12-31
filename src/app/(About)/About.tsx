@@ -9,7 +9,7 @@ import BottomSheetFooter from 'components/BottomSheet/FooterBtn';
 const About = ({ open }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const paramAbout = searchParams.get('a');
+  const paramAbout = searchParams.get('about');
 
   const onDismiss = () => {
     router.push('/');
@@ -28,7 +28,7 @@ const About = ({ open }) => {
       }}
       footer={
         paramAbout != '' ? (
-          <BottomSheetFooter as={Link} href="/?a">
+          <BottomSheetFooter as={Link} href="/?about">
             뒤로가기
           </BottomSheetFooter>
         ) : (
@@ -39,11 +39,11 @@ const About = ({ open }) => {
         switch (paramAbout) {
           case '':
             return '정보';
-          case 't':
+          case 'terms':
             return '서비스 이용약관';
-          case 'p':
+          case 'privacy':
             return '개인정보 취급 방침';
-          case 'l':
+          case 'license':
             return '오픈소스 라이센스';
           default:
             return null;
@@ -56,13 +56,13 @@ const About = ({ open }) => {
             return (
               <>
                 <p>
-                  <Link href="/?a=t">서비스 이용약관</Link>
+                  <Link href="/?about=terms">서비스 이용약관</Link>
                 </p>
                 <p>
-                  <Link href="/?a=p">개인정보 취급 방침</Link>
+                  <Link href="/?about=privacy">개인정보 취급 방침</Link>
                 </p>
                 <p>
-                  <Link href="/?a=l">오픈소스 라이센스</Link>
+                  <Link href="/?about=license">오픈소스 라이센스</Link>
                 </p>
                 <p>
                   <Link href="https://github.com/chebread" target="_self">
@@ -71,11 +71,11 @@ const About = ({ open }) => {
                 </p>
               </>
             );
-          case 't':
+          case 'terms':
             return <Terms />;
-          case 'p':
+          case 'privacy':
             return <Privacy />;
-          case 'l':
+          case 'license':
             return <License />;
           default:
             return null;

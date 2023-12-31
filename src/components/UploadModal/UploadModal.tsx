@@ -16,6 +16,8 @@ import styled from 'styled-components';
 // (0): 전체 공개 혹은 비공개 선택 가능 (비공개는 자신의 프로필에서만 확인가능)
 // 다른 위치는 카카오 api 사용. 그리고 다른 위치 추가시 거기로 snapTo하기
 
+// ?upload로 바꾸기
+
 const UploadModal = ({ open, lat, lng, onDismiss }) => {
   const [spotData, setSpotData] = useState<{
     title: string;

@@ -15,12 +15,7 @@ const SearchModal = ({ open }) => {
   };
 
   return (
-    <BottomSheet
-      open={open}
-      onDismiss={onDismiss}
-      header="검색"
-      blocking={false}
-    >
+    <BottomSheet open={open} onDismiss={onDismiss} header="검색">
       <h2>유저 검색</h2>
       <input
         type="text"

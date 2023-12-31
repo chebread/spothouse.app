@@ -18,6 +18,7 @@ import Router from 'components/Router';
 
 // 내부적은 uid 사용, 외부 사용자 개입되는 것은 username 사용
 // (0): uidAtom 삭제함 (currentUserData.uid로 통함 처리함) => 에러 없는지 크로스 체킹 필요
+// (0): idb 도입하기
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);

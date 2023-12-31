@@ -19,7 +19,6 @@ import { currentUserDataAtom } from 'atom/authAtom';
 const FeedTabBar = () => {
   const searchParams = useSearchParams();
   const paramUsername = searchParams.get('u');
-  const { width } = useResize();
   const [isMenuClicked, setIsMenuClicked] = useAtom(isMenuClickedAtom);
   const [isUploadClicked, setIsUploadClicked] = useAtom(isUploadClickedAtom);
   const [currentUserData] = useAtom(currentUserDataAtom);
@@ -32,7 +31,7 @@ const FeedTabBar = () => {
   };
 
   return (
-    <Container open={true} blocking={false} $visible={width < 640}>
+    <Container open={true} blocking={false}>
       <Wrapper>
         <>
           <Nav onClick={onMenu}>
@@ -60,7 +59,7 @@ const FeedTabBar = () => {
             href={
               paramUsername === currentUserData.username
                 ? '/'
-                : `?u=${currentUserData.username}`
+                : `?user=${currentUserData.username}`
             }
           >
             <Profile
@@ -75,9 +74,11 @@ const FeedTabBar = () => {
   );
 };
 
-const Container = styled(BottomSheetProvider)<{ $visible }>`
-  display: ${({ $visible }) =>
-    $visible ? 'block' : 'none'}; // 모달 겹침 현상으로 인해 이런 식으로 처리함
+const Container = styled(BottomSheetProvider)<{ $visible: boolean }>`
+  display: block;
+  @media (min-width: 640px) {
+    display: none;
+  }
   // 모달
   [data-rsbs-overlay] {
     z-index: 1;

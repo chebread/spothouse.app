@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
     ${appCssVars.all}
     ${appCssVars.mobile}
   }
-  @media (min-width: 639.9px) {
+  @media (min-width: 640px) {
     body {
       ${appCssVars.desktop}
     }
@@ -36,6 +36,12 @@ const GlobalStyles = createGlobalStyle`
   div#__next > div {
     position: relative;
     height: 100%;
+  }
+  // font
+  html,
+  body {
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
   }
 `;
 

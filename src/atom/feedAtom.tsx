@@ -23,6 +23,7 @@ const centerPosAtom = atom<{ lat: number; lng: number }>({
   lng: 126.976805,
 });
 const zoomLevelAtom = atom(4);
+const isHeaderVisibleAtom = atom(true);
 
 export {
   isApproximatePosLoadedAtom,
@@ -38,4 +39,5 @@ export {
   isMenuClickedAtom,
   isSearchClickedAtom,
   isPostSearchClickedAtom,
+  isHeaderVisibleAtom,
 };

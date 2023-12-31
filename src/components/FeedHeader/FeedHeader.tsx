@@ -5,10 +5,12 @@ import {
   currentPosAtom,
   isApproximatePosLoadedAtom,
   isFocusedAtom,
+  isHeaderVisibleAtom,
   isMenuClickedAtom,
   isMovedAtom,
   isPostSearchClickedAtom,
   isUploadClickedAtom,
+  zoomLevelAtom,
 } from 'atom/feedAtom';
 import { useAtom } from 'jotai';
 import { useSearchParams } from 'next/navigation';
@@ -18,20 +20,21 @@ import FilledNavigationIcon from 'assets/FilledNavigationIcon.svg';
 import MenuIcon from 'assets/MenuIcon.svg';
 import AddIcon from 'assets/AddIcon.svg';
 import NotificationsIcon from 'assets/NotificationsIcon.svg';
+import SearchIcon from 'assets/SearchIcon.svg';
 import BackIcon from 'assets/BackIcon.svg';
 import styled from 'styled-components';
 import disableHighlight from 'styles/disableHighlight';
 import disableSelection from 'styles/disableSelection';
 import Link from 'next/link';
 
-// (0): isNeededBack으로 관리하는 것이 아니라 headerVisible로 관리하자 (ture / false로 하도록 한다.)
+// (0): loading 하는거 idb 체크해서 안하게 하자!
 
 const FeedHeader = () => {
   const searchParams = useSearchParams();
   const paramRoutes = searchParams
     .toString()
     .substring(0, searchParams.toString().indexOf('='));
-  const isNeededBack = paramRoutes === 'u' || paramRoutes === 'p'; // 유저가 없으면 이거 작동시키면 안됨. => 아니다 그냥 프로필 에서 404 때려버리자.
+  const isNeededBack = paramRoutes === 'user' || paramRoutes === 'post'; // 유저가 없으면 이거 작동시키면 안됨. => 아니다 그냥 프로필 에서 404 때려버리자.
 
   const paramUsername = searchParams.get('u');
   const [currentUserData] = useAtom(currentUserDataAtom);
@@ -49,6 +52,8 @@ const FeedHeader = () => {
   const [isUploadClicked, setIsUploadClicked] = useAtom(isUploadClickedAtom); // 위치 추가 토글
   const [currentPos, setCurrentPos] = useAtom(currentPosAtom); // 현재 위치 정보
   const [centerPos, setCenterPos] = useAtom(centerPosAtom); // Map center 위치 정보
+  const [zoomLevel, setZoomLevel] = useAtom(zoomLevelAtom);
+  const [isHeaderVisble, setIsHeaderVisible] = useAtom(isHeaderVisibleAtom);
 
   // 메뉴 클릭시
   const onMenu = (e: any) => {
@@ -98,19 +103,19 @@ const FeedHeader = () => {
           <BackBtn
             as={Link}
             href="/"
-            $visible={isNeededBack} // (0): 개선할꺼면 개선하기
+            $visible={!isHeaderVisble} // (0): 개선할꺼면 개선하기
           >
             <BackIcon />
           </BackBtn>
-          <MenuBtn $visible={!isNeededBack} onClick={onMenu}>
+          <MenuBtn $visible={isHeaderVisble} onClick={onMenu}>
             <MenuIcon />
           </MenuBtn>
           <ProfileBtn
-            $visible={!isNeededBack}
+            $visible={isHeaderVisble}
             href={
               paramUsername === currentUserData.username
                 ? '/'
-                : `?u=${currentUserData.username}`
+                : `/?user=${currentUserData.username}`
             }
             style={{
               backgroundImage: `url(${currentUserData.profileFileUrl})`,
@@ -133,12 +138,12 @@ const FeedHeader = () => {
           )}
         </CenterBtnWrapper>
         <RightBtnWrapper>
-          <UploadBtn $visible={!isNeededBack} onClick={onUpload}>
+          <UploadBtn $visible={isHeaderVisble} onClick={onUpload}>
             <AddIcon />
           </UploadBtn>
-          <NotificationsBtn $visible={!isNeededBack} as={Link} href="/?n">
-            <NotificationsIcon />
-          </NotificationsBtn>
+          <SearchBtn $visible={isHeaderVisble} as={Link} href="/?search">
+            <SearchIcon />
+          </SearchBtn>
           <FocusBtn
             onClick={(e: any) => {
               onFocus();
@@ -247,7 +252,7 @@ const RoundBtn = styled.button`
   background-color: #fff;
   /* height: 3rem;
   width: 3rem;
-  @media (min-width: 639.9px) {
+  @media (min-width: 640px) {
     height: 3.5rem;
     width: 3.5rem;
   } */
@@ -283,10 +288,6 @@ const BackBtn = styled(RoundBtn)<{
       transform: scale(1);
     }
   }
-
-  /* @media (min-width: 640px) {
-    display: none;
-  } */
 `;
 const UploadBtn = styled(RoundBtn)<{
   $visible: boolean;
@@ -309,7 +310,7 @@ const UploadBtn = styled(RoundBtn)<{
     }
   }
 `;
-const NotificationsBtn = styled(RoundBtn)<{
+const SearchBtn = styled(RoundBtn)<{
   $visible: boolean;
 }>`
   display: ${({ $visible }) => ($visible ? 'flex' : 'none')};
@@ -329,6 +330,9 @@ const NotificationsBtn = styled(RoundBtn)<{
       transform: scale(1);
     }
   }
+  /* @media (max-width: 639.9px) {
+    display: none;
+  } */
 `;
 // const MobileSearchBtn = styled(RoundBtn)`
 //   @media (min-width: 640px) {

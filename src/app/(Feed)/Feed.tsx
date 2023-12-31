@@ -32,6 +32,7 @@ import FeedTabBar from 'components/FeedTabBar';
 // (0): 실시간 위치 추적기능 만들기 (포커싱)
 // min-width: 640px 부터 모바일로 간주함
 // (0): 여기서 Feed map data 로딩하고 Feed에 뿌려주기 (이곳은 완전한 유저와 환경일때만 보이는 곳이니까) => 로드하고 idb에 모든 정보 저장함. 데이터 변경시에만 불러옴 (전체적인 api 변경 인식)
+// (0): loading 제거 및 isArrpovi... 로직 제거 논의 (DOM)
 
 const Feed = () => {
   const [level, setLevel] = useAtom(zoomLevelAtom); // level 정보
@@ -58,7 +59,7 @@ const Feed = () => {
     const onLoad = async () => {
       // get outline current position from ip address
       // 여기서 한 번 데이터 패칭, 정확한 지도에서 한 번 패칭 함
-      fetch('https://ipapi.co/json/') // https://ipapi.co/json/ / http://ip-api.com/json
+      fetch('') // https://ipapi.co/json/ / http://ip-api.com/json
         .then(response => response.json())
         .then(json => {
           const { latitude, longitude } = json;

@@ -13,11 +13,11 @@ const DesktopMenuModal = ({ onDismiss }) => {
   return (
     <Container $visible={isMenuClicked}>
       <MenuWrapper>
-        <Menu onClick={onDismiss} href="/?s">
+        <Menu onClick={onDismiss} href="/?settings">
           <span>설정</span>
         </Menu>
         <MenuHr />
-        <Menu onClick={onDismiss} href="/?a">
+        <Menu onClick={onDismiss} href="/?about">
           <span>정보</span>
         </Menu>
       </MenuWrapper>
@@ -79,7 +79,7 @@ const Menu = styled(Link)`
 
   span {
     font-size: 15px;
-    line-height: 21px;
+    line-height: 15px;
     font-weight: 600;
   }
 `;
